@@ -1,0 +1,34 @@
+# depslib dependency file v1.0
+1595715284 source:c:\users\mica\desktop\modelodeparcialpantallas\contrataciones.c
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	"inputs.h"
+	"Contrataciones.h"
+
+1595717818 source:c:\users\mica\desktop\modelodeparcialpantallas\main.c
+	<stdio.h>
+	<stdlib.h>
+	"Pantalla.h"
+	"Contrataciones.h"
+	"inputs.h"
+
+1595532572 source:c:\users\mica\desktop\modelodeparcialpantallas\inputs.c
+	"inputs.h"
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+
+1595532598 c:\users\mica\desktop\modelodeparcialpantallas\inputs.h
+
+1595717611 source:c:\users\mica\desktop\modelodeparcialpantallas\pantalla.c
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	"inputs.h"
+	"Pantalla.h"
+
+1595715263 c:\users\mica\desktop\modelodeparcialpantallas\pantalla.h
+
+1595715263 c:\users\mica\desktop\modelodeparcialpantallas\contrataciones.h
+
