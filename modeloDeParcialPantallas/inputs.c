@@ -3,160 +3,152 @@
 #include <stdlib.h>
 #include <string.h>
 
-int getInt(int* integer, char* message, char* errorMessage)
+#define SUCCES 0
+#define ERROR -1
+
+
+int getString(char* string, int len)
 {
-    int Return = -1;
-    char auxNum[4000];
+    int Return = ERROR;
+    char aux[4096];
 
-    if(integer != NULL && message != NULL && errorMessage != NULL)
+    if(string != NULL && len > 0)
     {
-        printf("%s",message);
         fflush(stdin);
-        fgets(auxNum,4000,stdin);
-        auxNum[strlen(auxNum)-1]='\0';
+        fgets(aux,sizeof(aux),stdin);
+        aux[strnlen(aux,sizeof(aux))-1]='\0';
 
-        while(validationInt(auxNum)== -1)
+        if(strnlen(aux,sizeof(aux)) <= len)
         {
-            printf("%s",errorMessage);
-            fflush(stdin);
-            fgets(auxNum,4000,stdin);
-            auxNum[strlen(auxNum)-1]='\0';
+            strncpy(string,aux,len);
+            Return = SUCCES;
         }
-
-        *integer = atoi(auxNum);
-        Return = 0;
     }
 
     return Return;
 }
 
+int getInt(int* integer)
+{
+    int Return = ERROR;
+    char aux[4096];
+
+    if(integer != NULL)
+    {
+        if(getString(aux,sizeof(aux))== SUCCES && validationInt(aux) == SUCCES)
+        {
+            *integer = atoi(aux);
+            Return = SUCCES;
+        }
+    }
+    return Return;
+}
 
 int validationInt(char num[])
 {
-    int Return = 0;
+    int Return = SUCCES;
     int i = 0;
 
-    if(num[0] == '-' || num[0] == '+')
+    if(num != NULL)
     {
-        i = 1;
-    }
-
-    for( ; num[i]!= '\0'; i++)
-    {
-
-        if(num[i] < '0' || num[i] > '9')
+        if(num[0] == '-' || num[0] == '+')
         {
-            Return = -1;
-            break;
-        }
-    }
-
-    return Return;
-}
-
-int getFloat(float* decimal, char* message, char* errorMessage)
-{
-    int Return = -1;
-    char auxNum[4000];
-
-    if(decimal != NULL && message != NULL && errorMessage != NULL)
-    {
-        printf("%s",message);
-        fflush(stdin);
-        fgets(auxNum,4000,stdin);
-        auxNum[strlen(auxNum)-1]='\0';
-
-        while(validationFloat(auxNum)== -1)
-        {
-            printf("%s",errorMessage);
-            fflush(stdin);
-            fgets(auxNum,4000,stdin);
-            auxNum[strlen(auxNum)-1]='\0';
+            i = 1;
         }
 
-        *decimal = atof(auxNum);
-        Return = 0;
-    }
-
-    return Return;
-
-}
-
-int validationFloat(char num[])
-{
-    int Return = 0;
-    int i = 0;
-    int counterPoints = 0;
-
-    if(num[0] == '-' || num[0] == '+')
-    {
-        i = 1;
-    }
-
-    for( ; num[i]!= '\0'; i++)
-    {
-        if(num[i] < '0' || num[i] > '9')
+        for( ; num[i]!= '\0'; i++)
         {
-            if(num[i] == '.')
+            if(num[i] < '0' || num[i] > '9')
             {
-                counterPoints++;
-                if(counterPoints>1)
-                {
-                    Return = -1;
-                    break;
-                }
-            }
-            else
-            {
-                Return = -1;
+                Return = ERROR;
                 break;
             }
         }
     }
 
-    if(num[strlen(num)-1] == '.')
+    return Return;
+}
+
+int getFloat(float * floating)
+{
+    int Return = ERROR;
+    char aux[4096];
+
+    if(floating != NULL)
     {
-        Return = -1;
+        if(getString(aux,sizeof(aux))== SUCCES && validationFloat(aux) == SUCCES)
+        {
+            *floating = atof(aux);
+            Return = SUCCES;
+        }
+    }
+    return Return;
+}
+
+int validationFloat(char num[])
+{
+    int Return = SUCCES;
+    int i = 0;
+    int counterPoints = 0;
+
+    if(num != NULL)
+    {
+        if(num[0] == '-' || num[0] == '+')
+        {
+            i = 1;
+        }
+
+        for( ; num[i]!= '\0'; i++)
+        {
+            if(num[i] < '0' || num[i] > '9')
+            {
+                if(num[i] == '.')
+                {
+                    counterPoints++;
+                    if(counterPoints>1)
+                    {
+                        Return = ERROR;
+                        break;
+                    }
+                }
+                else
+                {
+                    Return = ERROR;
+                    break;
+                }
+            }
+        }
     }
 
     return Return;
 }
 
-int getString(char* string, char* message, char* errorMessage)
+int getTxt(char* txt, int len)
 {
-    int Return = -1;
+    int Return = ERROR;
+    char aux[4096];
 
-    if(string != NULL && message != NULL && errorMessage != NULL)
+    if(txt!= NULL)
     {
-        printf("%s",message);
-        fflush(stdin);
-        fgets(string,4000,stdin);
-        string[strlen(string)-1]='\0';
-
-        while(validationOnlyLetter(string)== -1)
+        if(getString(aux,sizeof(aux))== SUCCES && validationOnlyLetter(aux) == SUCCES && (strnlen(aux,sizeof(aux))<len))
         {
-            printf("%s",errorMessage);
-            fflush(stdin);
-            fgets(string,4000,stdin);
-            string[strlen(string)-1]='\0';
+            strncpy(txt,aux,len);
+            Return = SUCCES;
         }
-
-        Return = 0;
     }
-
     return Return;
 }
 
 int validationOnlyLetter(char string[])
 {
     int i ;
-    int Return = 0;
+    int Return = SUCCES;
 
     for(i=0; string[i]!= '\0'; i++)
     {
         if((string[i] < 'a' || string [i] > 'z') && (string[i] < 'A' || string[i] > 'Z') && (string[i] != ' '))
         {
-            Return = -1;
+            Return = ERROR;
             break;
         }
     }
@@ -164,89 +156,135 @@ int validationOnlyLetter(char string[])
     return Return;
 }
 
-//revisar esta funcion
-int getChar(char* character, char* message, char* errorMessage)
+int getAlphaNumeric(char* txt, int len)
 {
-    int Return = -1;
-    char auxChar;
+    int Return = ERROR;
+    char aux[4096];
 
-    if(character != NULL && message != NULL && errorMessage != NULL)
+    if(txt!= NULL)
     {
-        printf("%s",message);
-        fflush(stdin);
-        scanf("%c",&auxChar);
-
-        while(validationOnlyLetter(character)== -1)
+        if(getString(aux,sizeof(aux))== SUCCES && validationAlphaNumeric(aux) == SUCCES && (strnlen(aux,sizeof(aux))<len))
         {
-            printf("%s",errorMessage);
-            fflush(stdin);
-            scanf("%c",&auxChar);
+            strncpy(txt,aux,len);
+            Return = SUCCES;
         }
+    }
+    return Return;
+}
 
-        *character = auxChar;
-        Return = 0;
+int validationAlphaNumeric(char string[])
+{
+    int i ;
+    int Return = SUCCES;
+
+    for(i=0; string[i]!= '\0'; i++)
+    {
+        if((string[i] < 'a' || string [i] > 'z') && (string[i] < 'A' || string[i] > 'Z') && (string[i] != ' ') && (string[i] < '0' || string[i] > '9'))
+        {
+            Return = ERROR;
+            break;
+        }
     }
 
     return Return;
 }
 
 
-int getDni(char* string, char* message, char* errorMessage)
+int getNumber(int* number, char* message, char* errorMessage, int min, int max)
 {
-    int Return = -1;
+    int Return = ERROR;
+    int auxNumber;
 
-    if(string != NULL && message != NULL && errorMessage != NULL)
+    if(number != NULL && message != NULL && errorMessage != NULL && min<max && max>min)
     {
-        printf("%s",message);
-        fflush(stdin);
-        fgets(string,4000,stdin);
-        string[strlen(string)-1]='\0';
-
-        while(validationDni(string)== -1)
+        do
         {
-            printf("%s",errorMessage);
-            fflush(stdin);
-            fgets(string,4000,stdin);
-            string[strlen(string)-1]='\0';
-        }
+            printf("%s",message);
 
-        Return = 0;
-    }
-
-    return Return;
-}
-
-int validationDni(char num[])
-{
-    int Return = 0;
-    int i;
-    int counterPoints = 0;
-
-
-    for(i=0; num[i]!= '\0'; i++)
-    {
-        if(num[i] < '0' || num[i] > '9')
-        {
-            if(num[i] == '.')
+            if(getInt(&auxNumber) == SUCCES && auxNumber>=min && auxNumber<=max)
             {
-                counterPoints++;
-                if(counterPoints>2)
-                {
-                    Return = -1;
-                    break;
-                }
-            }
-            else
-            {
-                Return = -1;
+                Return = SUCCES;
+                *number = auxNumber;
                 break;
             }
-        }
+            printf("%s",errorMessage);
+
+        }while(Return == ERROR);
     }
 
-    if(num[strlen(num)-1] == '.')
+    return Return;
+}
+
+int getFloatNumber(float* floatNumber, char* message, char* errorMessage, int min, int max)
+{
+    int Return = ERROR;
+    float auxNumber;
+
+    if(floatNumber != NULL && message != NULL && errorMessage != NULL && min<max && max>min)
     {
-        Return = -1;
+        do
+        {
+            printf("%s",message);
+
+            if(getFloat(&auxNumber) == SUCCES && auxNumber>=min && auxNumber<=max)
+            {
+                Return = SUCCES;
+                *floatNumber = auxNumber;
+                break;
+            }
+            printf("%s",errorMessage);
+
+        }while(Return == ERROR);
+    }
+
+    return Return;
+}
+
+int getName(char* name, int len, char* message, char* errorMessage)
+{
+    int Return = ERROR;
+    char aux[4096];
+
+    if(name != NULL && message != NULL && errorMessage != NULL)
+    {
+        do
+        {
+            printf("%s",message);
+
+            if(getTxt(aux,sizeof(aux))==SUCCES && strnlen(aux,sizeof(aux))<len)
+            {
+                Return = SUCCES;
+                strncpy(name,aux,len);
+                break;
+            }
+            printf("%s",errorMessage);
+
+        }while(Return == ERROR);
+    }
+
+    return Return;
+}
+
+int getTxtAndNum(char* txt, int len, char* message, char* errorMessage)
+{
+    int Return = ERROR;
+    char aux[4096];
+
+    if(txt != NULL && message != NULL && errorMessage != NULL)
+    {
+        do
+        {
+            printf("%s",message);
+
+            if(getAlphaNumeric(aux,sizeof(aux))==SUCCES && strnlen(aux,sizeof(aux))<len)
+            {
+                Return = SUCCES;
+                strncpy(txt,aux,len);
+                break;
+            }
+            printf("%s",errorMessage);
+
+        }while(Return == ERROR);
     }
 
     return Return;

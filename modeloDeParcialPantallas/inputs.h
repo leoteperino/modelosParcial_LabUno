@@ -1,68 +1,27 @@
-
-
-/** \brief
- *
- * \param
- * \param
- * \return
- *
- */
-int getInt(int* integer, char* message, char* errorMessage);
-
-/** \brief
- *
- * \param
- * \param
- * \return
- *
- */
+int getString(char* string, int len);
+int getInt(int* integer);
 int validationInt(char num[]);
-
-/** \brief
- *
- * \param
- * \param
- * \return
- *
- */
-int getFloat(float* decimal, char* message, char* errorMessage);
-
-/** \brief
- *
- * \param
- * \param
- * \return
- *
- */
+int getFloat(float * floating);
 int validationFloat(char num[]);
-
-/** \brief
- *
- * \param
- * \param
- * \return
- *
- */
-int getString(char* string, char* message, char* errorMessage);
-
-/** \brief
- *
- * \param
- * \param
- * \return
- *
- */
+int getTxt(char* txt, int len);
 int validationOnlyLetter(char string[]);
+int getAlphaNumeric(char* txt, int len);
+int validationAlphaNumeric(char string[]);
 
-/** \brief
- *
- * \param
- * \param
- * \return
- *
- */
-int getChar(char* character, char* message, char* errorMessage);
+/**Contempla solo un rango de numeros establecidos entre minimo y maximo. Solo numeros enteros*/
+int getNumber(int* number, char* message, char* errorMessage, int min, int max);
+/**Contempla solo un rango de numeros establecidos entre minimo y maximo. Numeros enteros o decimales*/
+int getFloatNumber(float* floatNumber, char* message, char* errorMessage, int min, int max);
+/**Contempla solo texto y espacios*/
+int getName(char* name, int len, char* message, char* errorMessage);
+/**Contempla texto, numeros y espacios*/
+int getTxtAndNum(char* txt, int len, char* message, char* errorMessage);
 
 
-int getDni(char* string, char* message, char* errorMessage);
-int validationDni(char num[]);
+/***Faltaria diseñar:
+* getCuit
+* getDni
+* getMail
+* getWeb
+*getChar
+*/
