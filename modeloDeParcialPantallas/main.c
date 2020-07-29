@@ -1,15 +1,20 @@
+///FALTA - PUNTO 7 y PUNTO 10
+///DOCUMENTAR FUNCIONES DE INFORMAR.H
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "ContratacionPantalla.h"
+#include "Informar.h"
 #include "inputs.h"
 
 #define CANTIDAD_PANTALLAS 100
 #define CANTIDAD_CONTRATACIONES 1000
 
+#define OCUPADO 1
+#define VACIO 0
 #define ERROR -1
 #define EXITO 0
+#define NOEXISTE -2
 
 int main(void)
 {
@@ -22,15 +27,14 @@ int main(void)
     int idContrataciones=0;
 
     int opcion;
-    //int auxiliarIndiceCont;
 
     int auxiliarIdPant;
-    //int auxiliarIdCont;
-
     int auxBaja;
     int auxModificacion;
     int auxAltaCont;
-
+    char auxCuit[CUIT_LEN];
+    int auxModCont;
+    int auxBajaCont;
 
     ///INICIALIZACION DE ARRAYS:
     pan_inicializarIDArray(arrayPantallas,CANTIDAD_PANTALLAS);
@@ -63,7 +67,7 @@ int main(void)
                      "\n10.Informar"
                      "\n11.Salir\n"
                      "\n\n Ingrese una opcion: ",
-                     "No es una opcion valida",1,11)==0)
+                     "\n\nNo es una opcion valida\n",1,11)==0)
         {
 
             {
@@ -108,7 +112,7 @@ int main(void)
                     {
                         auxBaja = pan_bajaArray(arrayPantallas,CANTIDAD_PANTALLAS,auxiliarIdPant);
                         if(auxBaja == EXITO &&
-                                con_cancelarContratacionPantalla(arrayContrataciones,CANTIDAD_CONTRATACIONES,auxiliarIdPant)== EXITO)
+                                con_cancelarContratacionPorBajaPantalla(arrayContrataciones,CANTIDAD_CONTRATACIONES,auxiliarIdPant)== EXITO)
                         {
                             printf("\nBaja realizada con exito\n");
                         }
@@ -143,25 +147,66 @@ int main(void)
                     }
                     break;
                 case 5:
+                    if(getTxtAndNum(auxCuit,CUIT_LEN,"\nIndique el CUIT del cliente para conocer sus contrataciones: ","\nInvalido") == EXITO)
+                    {
+                        info_imprimirArray(arrayPantallas,CANTIDAD_PANTALLAS,arrayContrataciones,CANTIDAD_CONTRATACIONES,auxCuit);
+                    }
 
+                    if(getNumber(&auxiliarIdPant,"\nIndique el ID de la contratacion a modificar: ","\nID invalido!",0,10000) == EXITO)
+                    {
+                        auxModCont = con_modificarArray(arrayContrataciones,CANTIDAD_CONTRATACIONES,auxiliarIdPant);
+
+                        if(auxModCont == EXITO)
+                        {
+                            printf("\nModificacion realizada con exito\n");
+                        }
+                        else
+                        {
+                            if(auxModCont == NOEXISTE)
+                                printf("\nEl id ingresado no existe\n");
+                            else
+                                printf("\nNo se ha realizado la baja\n");
+                        }
+                    }
                     break;
-
                 case 6:
+                    if(getTxtAndNum(auxCuit,CUIT_LEN,"\nIndique el CUIT del cliente para conocer sus contrataciones: ","\nInvalido") == EXITO)
+                    {
+                        info_imprimirArray(arrayPantallas,CANTIDAD_PANTALLAS,arrayContrataciones,CANTIDAD_CONTRATACIONES,auxCuit);
+                    }
 
+                    if(getNumber(&auxiliarIdPant,"\nIndique el ID de la contratacion a cancelar: ","\nID invalido!",0,10000) == EXITO)
+                    {
+                        auxBajaCont = con_bajaArray(arrayContrataciones,CANTIDAD_CONTRATACIONES,auxiliarIdPant);
+
+                        if(auxBajaCont == EXITO)
+                        {
+                            printf("\nBaja realizada con exito\n");
+                        }
+                        else
+                        {
+                            if(auxBajaCont == NOEXISTE)
+                                printf("\nEl id ingresado no existe\n");
+                            else
+                                printf("\nNo se ha realizado la baja\n");
+                        }
+                    }
                     break;
-
                 case 7:
-
+                    /**Consulta facturación: Se deberá ingresar el cuit del cliente y se deberá listar el importe
+                    a pagar por cada contratación.*/
                     break;
-
                 case 8:
-                    con_imprimirArray(arrayContrataciones,CANTIDAD_CONTRATACIONES);
+                    //con_imprimirArray(arrayContrataciones,CANTIDAD_CONTRATACIONES);
+                    info_listarContrataciones(arrayPantallas,CANTIDAD_PANTALLAS,arrayContrataciones,CANTIDAD_CONTRATACIONES);
                     break;
                 case 9:
                     pan_imprimirArray(arrayPantallas,CANTIDAD_PANTALLAS);
                     break;
                 case 10:
-
+                    /**Informar:
+                    1. Lista de cada cliente con cantidad de contrataciones e importe a pagar por cada una.
+                    2. Cliente con importe más alto a facturar (si hay más de uno indicar el primero)*/
                     break;
                 case 11:
                     printf("\nHasta luego!\n");

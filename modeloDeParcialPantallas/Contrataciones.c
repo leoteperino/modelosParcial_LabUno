@@ -1,23 +1,14 @@
-
+#include "Contrataciones.h"
+#include "inputs.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "inputs.h"
-#include "Contrataciones.h"
 
 #define OCUPADO 1
 #define VACIO 0
-
 #define ERROR -1
 #define EXITO 0
-
-char cuitCliente[20];
-char nombreArchivo[50];
-int isEmpty;
-int idContratacion;
-int idPantalla;
-int dias;
-
+#define NOEXISTE -2
 
 int con_imprimir(eContratacion* auxContratacion)
 {
@@ -25,7 +16,7 @@ int con_imprimir(eContratacion* auxContratacion)
 
     if(auxContratacion != NULL && auxContratacion->isEmpty == OCUPADO)
     {
-        printf("\n%5d %18s %18s %15d %8d\n",auxContratacion->idContratacion,auxContratacion->nombreArchivo,auxContratacion->cuitCliente,auxContratacion->dias,auxContratacion->idPantalla);
+        printf("\n%15d %18s %18s %15d %15d\n",auxContratacion->idContratacion,auxContratacion->nombreArchivo,auxContratacion->cuitCliente,auxContratacion->dias,auxContratacion->idPantalla);
         retorno = EXITO;
     }
 
@@ -39,7 +30,7 @@ int con_imprimirArray(eContratacion* array,int limite)
 
     if(array != NULL && limite>0 && array->isEmpty == OCUPADO)
     {
-        printf("%5s %18s %18s %15s %8s","ID","ARCHIVO","CUIT","CANT. DIAS","ID PANTALLA");
+        printf("\n%15s %18s %18s %15s %15s\n","ID","ARCHIVO","CUIT","CANT. DIAS","ID PANTALLA");
 
         for(i=0; i<limite; i++)
         {
@@ -62,7 +53,44 @@ int con_inicializarArray(eContratacion* array,int limite)
         {
             array[i].isEmpty = VACIO;
         }
-        retorno=EXITO;
+        retorno = EXITO;
+    }
+
+    return retorno;
+}
+
+int con_inicializarIDArray(eContratacion* array,int limite)
+{
+    int retorno = ERROR;
+    int i;
+
+    if(array != NULL && limite>0)
+    {
+        for(i=0; i<limite; i++)
+        {
+            array[i].idContratacion = -1;
+        }
+        retorno = EXITO;
+    }
+
+    return retorno;
+}
+
+int con_getEmptyIndex(eContratacion* array,int limite)
+{
+    int retorno = ERROR;
+    int i;
+
+    if(array != NULL && limite>0)
+    {
+        for(i=0; i<limite; i++)
+        {
+            if(array[i].isEmpty == VACIO)
+            {
+                retorno = i;
+                break;
+            }
+        }
     }
 
     return retorno;
@@ -92,34 +120,33 @@ int con_altaArray(eContratacion* array,int limite, int* id, int auxIdPantalla)
     }
     else if(array !=NULL && limite>0 && indice == ERROR)///si es que el ID ingresado no existe
     {
-        retorno = -2;
+        retorno = NOEXISTE;
     }
 
     return retorno;
 }
 
-
-int con_getEmptyIndex(eContratacion* array,int limite)
+int con_cancelarContratacionPorBajaPantalla(eContratacion* arrayContratacion,int limite,int idRecibido)
 {
     int retorno = ERROR;
     int i;
 
-    if(array != NULL && limite>0)
+    if(arrayContratacion != NULL && limite>0)
     {
         for(i=0; i<limite; i++)
         {
-            if(array[i].isEmpty == VACIO)
+            if(arrayContratacion[i].idPantalla == idRecibido && arrayContratacion[i].isEmpty == OCUPADO)
             {
-                retorno = i;
-                break;
+                arrayContratacion[i].isEmpty = VACIO;
             }
         }
+        retorno = EXITO;
     }
 
     return retorno;
 }
 
-/*int con_buscarId(eContratacion array[], int limite, int valorBuscado)
+int con_buscarIdContratacion(eContratacion array[], int limite, int valorBuscado)
 {
     int retorno = ERROR;
     int i;
@@ -139,41 +166,46 @@ int con_getEmptyIndex(eContratacion* array,int limite)
     return retorno;
 }
 
-int con_modificarArray(eContratacion* array,int limite, int indice)
+int con_modificarArray(eContratacion* array,int limite, int idRecibido)
 {
     int retorno = ERROR;
     eContratacion aux;
     int opcion;
+    int indice;
 
-    if(array !=NULL && limite>0 && indice >= 0 && indice < limite)
+    indice = con_buscarIdContratacion(array,limite,idRecibido);
+
+    if(array !=NULL && limite>0 && indice != ERROR)
     {
 
         do
         {
-            if(getNumber(&opcion,"\n1. Cambiar nombre de archivo"
+            if(getNumber(&opcion,
+                         "\n1. Cambiar nombre de archivo"
                          "\n2. Cambiar CUIT"
                          "\n3. Cambiar Cant Dias"
-                         "\n4. Volver \n",
-                         "No es una opcion valida",1,4)==0)
+                         "\n4. Volver \n"
+                         "\n\n Ingrese una opcion: ",
+                         "\n\nNo es una opcion valida\n",1,4)==0)
             {
                 switch(opcion)
                 {
                 case 1:
-                    if(getTxtAndNum(aux.nombreArchivo,NOMBRE_LEN,"Ingrese nombre del archivo: ","Error, reingrese nombre del archivo: ") == 0)
+                    if(getTxtAndNum(aux.nombreArchivo,NOMBRE_LEN,"Ingrese nombre del archivo: ","Error.: ") == 0)
                     {
-                        strncpy(array[indice].nombreArchivo,aux.nombreArchivo,50);
+                        strncpy(array[indice].nombreArchivo,aux.nombreArchivo,NOMBRE_LEN);
                         retorno = EXITO;
                     }
                     break;
                 case 2:
-                    if(getTxtAndNum(aux.cuitCliente,CUIT_LEN,"Ingrese el CUIT sin guiones: ","Error, reingrese el CUIT: ") == 0)
+                    if(getTxtAndNum(aux.cuitCliente,CUIT_LEN,"Ingrese el CUIT sin guiones: ","Error. ") == 0)
                     {
                         strncpy(array[indice].cuitCliente,aux.cuitCliente,CUIT_LEN);
                         retorno = EXITO;
                     }
                     break;
                 case 3:
-                    if(getNumber(&aux.dias,"Ingrese la cantidad de dias: ","Error, reingrese cantidad de dias: ",0,500) == 0)
+                    if(getNumber(&aux.dias,"Ingrese la cantidad de dias: ","Error. ",0,500) == 0)
                     {
                         array[indice].dias = aux.dias;
                         retorno = EXITO;
@@ -189,20 +221,32 @@ int con_modificarArray(eContratacion* array,int limite, int indice)
     return retorno;
 }
 
-int con_bajaArray(eContratacion* array,int limite, int indice)
+int con_bajaArray(eContratacion* array,int limite, int idRecibido)
 {
     int retorno = ERROR;
+    int indice;
+    char respuesta[10];
 
-    if(array !=NULL && limite>0 && indice >= 0 && indice < limite && array[indice].isEmpty == OCUPADO)
+    indice = con_buscarIdContratacion(array,limite,idRecibido);
+
+    if(array !=NULL && limite>0 && indice != ERROR && array[indice].isEmpty == OCUPADO)
     {
-        array[indice].isEmpty = VACIO;
-        retorno = EXITO;
+        printf("\nSeguro que desea eliminar? [si/no]: \n\n");
+        getTxt(respuesta,10);
+
+        if(stricmp(respuesta,"si")==0)
+        {
+            array[indice].isEmpty = VACIO;
+            retorno = EXITO;
+        }
+    }
+    else if(array !=NULL && limite>0 && indice == ERROR)
+    {
+        retorno = NOEXISTE;
     }
 
     return retorno;
 }
-
-*/
 
 
 
@@ -228,43 +272,4 @@ void hardcordeoContrataciones(eContratacion arrayContratacion[], int* id)
             (*id)++;
         }
     }
-}
-
-int con_inicializarIDArray(eContratacion* array,int limite)
-{
-    int retorno = ERROR;
-    int i;
-
-    if(array != NULL && limite>0)
-    {
-        for(i=0; i<limite; i++)
-        {
-            array[i].idContratacion = -1;
-        }
-        retorno=EXITO;
-    }
-
-    return retorno;
-}
-
-
-
-int con_cancelarContratacionPantalla(eContratacion* arrayContratacion,int limite,int idRecibido)
-{
-    int retorno = ERROR;
-    int i;
-
-    if(arrayContratacion != NULL && limite>0)
-    {
-        for(i=0; i<limite; i++)
-        {
-            if(arrayContratacion[i].idPantalla == idRecibido && arrayContratacion[i].isEmpty == OCUPADO)
-            {
-                arrayContratacion[i].isEmpty = VACIO;
-            }
-        }
-        retorno = EXITO;
-    }
-
-    return retorno;
 }

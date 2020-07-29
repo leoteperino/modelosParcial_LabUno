@@ -35,6 +35,10 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="Contrataciones.h" />
+		<Unit filename="Informar.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="Informar.h" />
 		<Unit filename="Pantalla.c">
 			<Option compilerVar="CC" />
 		</Unit>

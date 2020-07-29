@@ -6,36 +6,24 @@
 
 #define OCUPADO 1
 #define VACIO 0
-
 #define ERROR -1
 #define EXITO 0
+#define NOEXISTE -2
 
-/**
- * \brief Imprime los datos de una pantalla
- * \param auxPantalla Puntero a ePantalla que se busca imprimir
- * \return Retorna 0 (EXITO) y -1 (ERROR)
- *
- */
+
 int pan_imprimir(ePantalla* auxPantalla)
 {
     int retorno = ERROR;
 
     if(auxPantalla != NULL && auxPantalla->isEmpty == OCUPADO)
     {
-        printf("\n%5d %18s %18s %18s %10.2f\n",auxPantalla->idPantalla,auxPantalla->tipo,auxPantalla->nombre,auxPantalla->direccion,auxPantalla->precio);
+        printf("\n%15d %18s %18s %18s %10.2f\n",auxPantalla->idPantalla,auxPantalla->tipo,auxPantalla->nombre,auxPantalla->direccion,auxPantalla->precio);
         retorno = EXITO;
     }
 
     return retorno;
 }
 
-/**
- * \brief Imprime el array de pantallas
- * \param array Array de pantallas
- * \param limite Limite del array de pantallas
- * \return Retorna 0 (EXITO) y -1 (ERROR)
- *
- */
 int pan_imprimirArray(ePantalla* array,int limite)
 {
     int retorno = ERROR;
@@ -43,7 +31,7 @@ int pan_imprimirArray(ePantalla* array,int limite)
 
     if(array != NULL && limite>0)
     {
-        printf("%5s %18s %18s %18s %10s\n","ID","TIPO","NOMBRE","DIRECCION","PRECIO");
+        printf("\n%15s %18s %18s %18s %10s\n","ID","TIPO","NOMBRE","DIRECCION","PRECIO");
 
         for(i=0; i<limite; i++)
         {
@@ -55,14 +43,6 @@ int pan_imprimirArray(ePantalla* array,int limite)
     return retorno;
 }
 
-
-/**
- * \brief Inicializa el array
- * \param array Array de pantallas
- * \param limite Limite del array de pantallas
- * \return Retorna 0 (EXITO) y -1 (ERROR)
- *
- */
 int pan_inicializarArray(ePantalla* array,int limite)
 {
     int retorno = ERROR;
@@ -74,22 +54,49 @@ int pan_inicializarArray(ePantalla* array,int limite)
         {
             array[i].isEmpty = VACIO;
         }
-        retorno=EXITO;
+        retorno = EXITO;
     }
 
     return retorno;
 }
 
+int pan_inicializarIDArray(ePantalla* array,int limite)
+{
+    int retorno = ERROR;
+    int i;
 
-/**
- * \brief Da de alta una pantalla en una posicion del array
- * \param array Array de pantallas a ser actualizado
- * \param limite Limite del array de pantallas
- * \param indice Posicion a ser actualizada
- * \param id Identificador a ser asignado a la pantalla
- * \return Retorna 0 (EXITO) y -1 (ERROR)
- *
- */
+    if(array != NULL && limite>0)
+    {
+        for(i=0; i<limite; i++)
+        {
+            array[i].idPantalla = -1;
+        }
+        retorno = EXITO;
+    }
+
+    return retorno;
+}
+
+int pan_getEmptyIndex(ePantalla* array,int limite)
+{
+    int retorno = ERROR;
+    int i;
+
+    if(array != NULL && limite>0)
+    {
+        for(i=0; i<limite; i++)
+        {
+            if(array[i].isEmpty == VACIO)
+            {
+                retorno = i;
+                break;
+            }
+        }
+    }
+
+    return retorno;
+}
+
 int pan_altaArray(ePantalla* array,int limite, int* id)
 {
     int retorno = ERROR;
@@ -116,39 +123,6 @@ int pan_altaArray(ePantalla* array,int limite, int* id)
     return retorno;
 }
 
-/**
- * \brief Buscar primer posicion vacia
- * \param array Array de pantallas
- * \param limite Limite del array de pantallas
- * \return Retorna el incice de la posicion vacia y -1 si ya no hay lugar o (ERROR)
- *
- */
-int pan_getEmptyIndex(ePantalla* array,int limite)
-{
-    int retorno = ERROR;
-    int i;
-
-    if(array != NULL && limite>0)
-    {
-        for(i=0; i<limite; i++)
-        {
-            if(array[i].isEmpty == VACIO)
-            {
-                retorno = i;
-                break;
-            }
-        }
-    }
-
-    return retorno;
-}
-
-/** \brief Busca un ID en un array y devuelve la posicion en que se encuentra
-* \param array Array de pantallas
-* \param limite Limite del array de pantallas
-* \param posicion del array donde se encuentra el valor buscado
-* \return int Return Posicion en la que se encuentra el id o (-1) si no encuentra el valor buscado o Error [Invalid length or NULL pointer]
-*/
 int pan_buscarId(ePantalla array[], int limite, int valorBuscado)
 {
     int retorno = ERROR;
@@ -169,23 +143,11 @@ int pan_buscarId(ePantalla array[], int limite, int valorBuscado)
     return retorno;
 }
 
-/**
- * \brief Actualiza los datos de una pantalla en una posicion del array
- * \param array Array de pantallas a ser actualizado
- * \param limite Limite del array de pantallas
- * \param indice Posicion a ser actualizada
- * \return Retorna 0 (EXITO) y -1 (ERROR)
- *
- */
 int pan_modificarArray(ePantalla* array,int limite, int idRecibido)
 {
     int retorno = ERROR;
     ePantalla aux;
     int opcion;
-
-    /**recibo id, uso la funcion de buscar por id /la funcion me devuelve el indice en el que esta ese id.
-    sabiendo cual es el indice hago la modificacion en esa posicion*/
-
     int indice;
 
     indice = pan_buscarId(array,limite,idRecibido);
@@ -202,7 +164,7 @@ int pan_modificarArray(ePantalla* array,int limite, int idRecibido)
                          "\n4. Cambiar tipo"
                          "\n5. Volver \n"
                          "\n\n Ingrese una opcion: ",
-                         "No es una opcion valida",1,5)== EXITO)
+                         "\n\nNo es una opcion valida\n",1,5)== EXITO)
             {
 
                 switch(opcion)
@@ -240,34 +202,26 @@ int pan_modificarArray(ePantalla* array,int limite, int idRecibido)
         }
         while(opcion != 5);
     }
-
-    if(array !=NULL && limite>0 && indice == ERROR)///si es que el ID ingresado no existe
+    else if(array !=NULL && limite>0 && indice == ERROR)
     {
-        retorno = -2;
+        retorno = NOEXISTE;
     }
+
     return retorno;
 }
 
-/**
- * \brief Actualiza una posicion del array // Hace una baja logica
- * \param array Array de pantallas a ser actualizado
- * \param limite Limite del array de pantallas
- * \param indice Posicion a ser actualizada
- * \return Retorna 0 (EXITO) y -1 (ERROR)
- *
- */
 int pan_bajaArray(ePantalla* array,int limite, int idRecibido)
 {
     int retorno = ERROR;
     int indice;
-    char respuesta[5];
+    char respuesta[10];
 
     indice = pan_buscarId(array,limite,idRecibido);
 
     if(array !=NULL && limite>0 && indice != ERROR && array[indice].isEmpty == OCUPADO)
     {
         printf("\nSeguro que desea eliminar? [si/no]: \n\n");
-        getTxt(respuesta,5);
+        getTxt(respuesta,10);
 
         if(stricmp(respuesta,"si")==0)
         {
@@ -275,10 +229,9 @@ int pan_bajaArray(ePantalla* array,int limite, int idRecibido)
             retorno = EXITO;
         }
     }
-
-    if(array !=NULL && limite>0 && indice == ERROR)///si es que el ID ingresado no existe
+    else if(array !=NULL && limite>0 && indice == ERROR)
     {
-        retorno = -2;
+        retorno = NOEXISTE;
     }
 
     return retorno;
@@ -308,21 +261,4 @@ void hardcordeoPantallas(ePantalla arrayPantalla[], int* id)
             (*id)++;
         }
     }
-}
-
-int pan_inicializarIDArray(ePantalla* array,int limite)
-{
-    int retorno = ERROR;
-    int i;
-
-    if(array != NULL && limite>0)
-    {
-        for(i=0; i<limite; i++)
-        {
-            array[i].idPantalla = -1;
-        }
-        retorno=EXITO;
-    }
-
-    return retorno;
 }
