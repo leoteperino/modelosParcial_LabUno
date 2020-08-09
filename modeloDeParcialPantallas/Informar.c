@@ -64,6 +64,48 @@ int info_listarContrataciones(ePantalla* arrayPantalla,int limitePan, eContratac
                        arrayContratacion[i].nombreArchivo,
                        arrayContratacion[i].dias,
                        arrayContratacion[i].cuitCliente);
+                retorno = EXITO;
+            }
+        }
+    }
+
+    return retorno;
+}
+
+/**Consulta facturación: Se deberá ingresar el cuit del cliente y se deberá listar el importe
+                    a pagar por cada contratación.*/
+
+int info_facturacion(ePantalla* arrayPantalla,int limitePan, eContratacion* arrayContratacion, int limiteCon, char* cuitRecibido)
+{
+    int retorno = ERROR;
+    int i;
+    int idPantalla;
+    int indicePantalla;
+    float importeFinal[limiteCon];
+
+    if(arrayPantalla != NULL && arrayContratacion != NULL && cuitRecibido != NULL && limitePan>0 && limiteCon>0)
+    {
+        printf("\n%15s %15s %15s %15s\n",
+               "CUIT CLIENTE",
+               "PRECIO PANTALLA",
+               "DIAS",
+               "IMPORTE FINAL");
+
+        for(i=0; i<limiteCon; i++)
+        {
+            if(strncmp(arrayContratacion[i].cuitCliente,cuitRecibido,CUIT_LEN)==0 && arrayContratacion[i].isEmpty == OCUPADO)
+            {
+                retorno = EXITO;
+                idPantalla = arrayContratacion[i].idPantalla;
+                indicePantalla = pan_buscarId(arrayPantalla,limitePan,idPantalla);
+
+                importeFinal[i] = arrayPantalla[indicePantalla].precio * arrayContratacion[i].dias;
+
+                printf("\n%15s %15.2f %15d %15.2f\n",
+                       arrayContratacion[i].cuitCliente,
+                       arrayPantalla[indicePantalla].precio,
+                       arrayContratacion[i].dias,
+                       importeFinal[i]);
             }
         }
     }

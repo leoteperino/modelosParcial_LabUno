@@ -248,6 +248,29 @@ int con_bajaArray(eContratacion* array,int limite, int idRecibido)
     return retorno;
 }
 
+int con_comprobarCuitValido(eContratacion* arrayContratacion, int limiteCon, char* cuitRecibido)
+{
+    int retorno = ERROR;
+    int i;
+
+    if(arrayContratacion != NULL && cuitRecibido != NULL && limiteCon>0)
+    {
+        for(i=0;i<limiteCon;i++)
+        {
+            if(strncmp(arrayContratacion[i].cuitCliente,cuitRecibido,CUIT_LEN)==0)
+            {
+                retorno = EXITO;
+                break;
+            }
+            else
+            {
+                retorno = NOEXISTE;
+            }
+        }
+    }
+
+    return retorno;
+}
 
 
 void hardcordeoContrataciones(eContratacion arrayContratacion[], int* id)

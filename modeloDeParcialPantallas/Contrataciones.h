@@ -109,13 +109,18 @@ int con_modificarArray(eContratacion* array,int limite, int idRecibido);
  */
 int con_bajaArray(eContratacion* array,int limite, int idRecibido);
 
+/**
+ * \brief Comprueba que el cuit ingresado por el usuario exista
+ * \param array Array de contrataciones
+ * \param limite Limite del array
+ * \param cuitRecibido Cuit buscado por el usuario
+ * \return Retorna 0 (SI EXISTE) y -1 (ERROR) -2 Si NO EXISTE
+ */
+int con_comprobarCuitValido(eContratacion* arrayContratacion, int limiteCon, char* cuitRecibido);
 
 
 /**Hardcodeo de datos**/
 void hardcordeoContrataciones(eContratacion arrayContratacion[], int* id);
-
-
-
 
 
 

@@ -1,4 +1,4 @@
-///FALTA - PUNTO 7 y PUNTO 10
+///FALTA - PUNTO 10
 ///DOCUMENTAR FUNCIONES DE INFORMAR.H
 
 #include <stdio.h>
@@ -35,6 +35,7 @@ int main(void)
     char auxCuit[CUIT_LEN];
     int auxModCont;
     int auxBajaCont;
+    int auxCuitExiste;
 
     ///INICIALIZACION DE ARRAYS:
     pan_inicializarIDArray(arrayPantallas,CANTIDAD_PANTALLAS);
@@ -149,52 +150,86 @@ int main(void)
                 case 5:
                     if(getTxtAndNum(auxCuit,CUIT_LEN,"\nIndique el CUIT del cliente para conocer sus contrataciones: ","\nInvalido") == EXITO)
                     {
-                        info_imprimirArray(arrayPantallas,CANTIDAD_PANTALLAS,arrayContrataciones,CANTIDAD_CONTRATACIONES,auxCuit);
-                    }
-
-                    if(getNumber(&auxiliarIdPant,"\nIndique el ID de la contratacion a modificar: ","\nID invalido!",0,10000) == EXITO)
-                    {
-                        auxModCont = con_modificarArray(arrayContrataciones,CANTIDAD_CONTRATACIONES,auxiliarIdPant);
-
-                        if(auxModCont == EXITO)
+                        auxCuitExiste = con_comprobarCuitValido(arrayContrataciones,CANTIDAD_CONTRATACIONES,auxCuit);
+                        if(auxCuitExiste == EXITO)
                         {
-                            printf("\nModificacion realizada con exito\n");
+                            info_imprimirArray(arrayPantallas,CANTIDAD_PANTALLAS,arrayContrataciones,CANTIDAD_CONTRATACIONES,auxCuit);
+
+                            if(getNumber(&auxiliarIdPant,"\nIndique el ID de la contratacion a modificar: ","\nID invalido!",0,10000) == EXITO)
+                            {
+                                auxModCont = con_modificarArray(arrayContrataciones,CANTIDAD_CONTRATACIONES,auxiliarIdPant);
+
+                                if(auxModCont == EXITO)
+                                {
+                                    printf("\nModificacion realizada con exito\n");
+                                }
+                                else
+                                {
+                                    if(auxModCont == NOEXISTE)
+                                        printf("\nEl id ingresado no existe\n");
+                                    else
+                                        printf("\nNo se ha realizado la modificacion\n");
+                                }
+                            }
                         }
                         else
                         {
-                            if(auxModCont == NOEXISTE)
-                                printf("\nEl id ingresado no existe\n");
+                            if(auxCuitExiste == NOEXISTE)
+                                printf("\nEl cuit ingresado no existe\n");
                             else
-                                printf("\nNo se ha realizado la baja\n");
+                                printf("\nError\n");
                         }
                     }
                     break;
                 case 6:
                     if(getTxtAndNum(auxCuit,CUIT_LEN,"\nIndique el CUIT del cliente para conocer sus contrataciones: ","\nInvalido") == EXITO)
                     {
-                        info_imprimirArray(arrayPantallas,CANTIDAD_PANTALLAS,arrayContrataciones,CANTIDAD_CONTRATACIONES,auxCuit);
-                    }
-
-                    if(getNumber(&auxiliarIdPant,"\nIndique el ID de la contratacion a cancelar: ","\nID invalido!",0,10000) == EXITO)
-                    {
-                        auxBajaCont = con_bajaArray(arrayContrataciones,CANTIDAD_CONTRATACIONES,auxiliarIdPant);
-
-                        if(auxBajaCont == EXITO)
+                        auxCuitExiste = con_comprobarCuitValido(arrayContrataciones,CANTIDAD_CONTRATACIONES,auxCuit);
+                        if(auxCuitExiste == EXITO)
                         {
-                            printf("\nBaja realizada con exito\n");
+                            info_imprimirArray(arrayPantallas,CANTIDAD_PANTALLAS,arrayContrataciones,CANTIDAD_CONTRATACIONES,auxCuit);
+                            if(getNumber(&auxiliarIdPant,"\nIndique el ID de la contratacion a cancelar: ","\nID invalido!",0,10000) == EXITO)
+                            {
+                                auxBajaCont = con_bajaArray(arrayContrataciones,CANTIDAD_CONTRATACIONES,auxiliarIdPant);
+
+                                if(auxBajaCont == EXITO)
+                                {
+                                    printf("\nBaja realizada con exito\n");
+                                }
+                                else
+                                {
+                                    if(auxBajaCont == NOEXISTE)
+                                        printf("\nEl id ingresado no existe\n");
+                                    else
+                                        printf("\nNo se ha realizado la baja\n");
+                                }
+                            }
                         }
                         else
                         {
-                            if(auxBajaCont == NOEXISTE)
-                                printf("\nEl id ingresado no existe\n");
+                            if(auxCuitExiste == NOEXISTE)
+                                printf("\nEl cuit ingresado no existe\n");
                             else
-                                printf("\nNo se ha realizado la baja\n");
+                                printf("\nError\n");
                         }
                     }
                     break;
                 case 7:
-                    /**Consulta facturación: Se deberá ingresar el cuit del cliente y se deberá listar el importe
-                    a pagar por cada contratación.*/
+                    if(getTxtAndNum(auxCuit,CUIT_LEN,"\nIndique el CUIT del cliente para conocer sus contrataciones: ","\nInvalido") == EXITO)
+                    {
+                        auxCuitExiste = con_comprobarCuitValido(arrayContrataciones,CANTIDAD_CONTRATACIONES,auxCuit);
+                        if(auxCuitExiste == EXITO)
+                        {
+                            info_facturacion(arrayPantallas,CANTIDAD_PANTALLAS,arrayContrataciones,CANTIDAD_CONTRATACIONES,auxCuit);
+                        }
+                        else
+                        {
+                            if(auxCuitExiste == NOEXISTE)
+                                printf("\nEl cuit ingresado no existe\n");
+                            else
+                                printf("\nError\n");
+                        }
+                    }
                     break;
                 case 8:
                     //con_imprimirArray(arrayContrataciones,CANTIDAD_CONTRATACIONES);

@@ -16,29 +16,29 @@
 
 1596052572 c:\users\mica\desktop\subir a git\modelosparcial_labuno\modelodeparcialpantallas\pantalla.h
 
-1596056839 source:c:\users\mica\desktop\subir a git\modelosparcial_labuno\modelodeparcialpantallas\main.c
+1596159539 source:c:\users\mica\desktop\subir a git\modelosparcial_labuno\modelodeparcialpantallas\main.c
 	<stdio.h>
 	<stdlib.h>
 	<string.h>
 	"Informar.h"
 	"inputs.h"
 
-1596056916 c:\users\mica\desktop\subir a git\modelosparcial_labuno\modelodeparcialpantallas\contrataciones.h
+1596159406 c:\users\mica\desktop\subir a git\modelosparcial_labuno\modelodeparcialpantallas\contrataciones.h
 
-1596056916 source:c:\users\mica\desktop\subir a git\modelosparcial_labuno\modelodeparcialpantallas\contrataciones.c
+1596159406 source:c:\users\mica\desktop\subir a git\modelosparcial_labuno\modelodeparcialpantallas\contrataciones.c
 	"Contrataciones.h"
 	"inputs.h"
 	<stdio.h>
 	<stdlib.h>
 	<string.h>
 
-1596055174 source:c:\users\mica\desktop\subir a git\modelosparcial_labuno\modelodeparcialpantallas\informar.c
+1596159439 source:c:\users\mica\desktop\subir a git\modelosparcial_labuno\modelodeparcialpantallas\informar.c
 	"Informar.h"
 	<stdio.h>
 	<stdlib.h>
 	<string.h>
 
-1596056916 c:\users\mica\desktop\subir a git\modelosparcial_labuno\modelodeparcialpantallas\informar.h
+1596159090 c:\users\mica\desktop\subir a git\modelosparcial_labuno\modelodeparcialpantallas\informar.h
 	"Contrataciones.h"
 	"Pantalla.h"
 
