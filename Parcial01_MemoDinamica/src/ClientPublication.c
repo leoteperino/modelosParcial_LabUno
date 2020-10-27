@@ -23,35 +23,38 @@
  */
 int client_removeClient(Client* listClient[],int lenClient, Publication* listPublication[], int lenPubli)
 {
-	int result = ERROR;
-	int bufferId;
-	char bufferAnswer[10];
-	int bufferRemovePubli;
+    int result = ERROR;
+    int bufferId;
+    char bufferAnswer[10];
+    int bufferRemovePubli;
 
-	if (listClient != NULL && lenClient > 0 && listPublication != NULL && lenPubli > 0)
-	{
-		if (cli_printList(listClient, lenClient) == SUCCESS
-				&& utn_getNumber(&bufferId, "\n\nIngrese el id del cliente que quiere eliminar: ", "\nError", 0, INT_MAX, 3) == SUCCESS
-				&& cli_findById(listClient, lenClient, bufferId) != ERROR)
-		{
-			if(publi_findByIdClient(listPublication,lenPubli,bufferId) != ERROR) {
-				publi_printListById(listPublication, lenPubli, bufferId);
-			} else {
-				printf("\nNo tiene publicaciones");
-			}
-			if (utn_getName(bufferAnswer, 10, "\n\nDesea borrar? Se eliminaran los avisos que el cliente tenga. "
-							"Debe ingresar 'Si' para proceder con la baja: ", "\nError,ingrese una respuesta valida.", 3) == SUCCESS
-					&& strncasecmp(bufferAnswer, "si", 10) == 0)
-			{
-				bufferRemovePubli = publi_remove(listPublication, lenPubli, listClient, lenClient, bufferId);
-				if((bufferRemovePubli == SUCCESS || bufferRemovePubli  == -2) && cli_remove(listClient, lenClient, bufferId) == SUCCESS)
-				{
-					result = SUCCESS;
-				}
-			}
-		}
-	}
-	return result;
+    if (listClient != NULL && lenClient > 0 && listPublication != NULL && lenPubli > 0)
+    {
+        if (cli_printList(listClient, lenClient) == SUCCESS
+                && utn_getNumber(&bufferId, "\n\nIngrese el id del cliente que quiere eliminar: ", "\nError", 0, INT_MAX, 3) == SUCCESS
+                && cli_findById(listClient, lenClient, bufferId) != ERROR)
+        {
+            if(publi_findByIdClient(listPublication,lenPubli,bufferId) != ERROR)
+            {
+                publi_printListById(listPublication, lenPubli, bufferId);
+            }
+            else
+            {
+                printf("\nNo tiene publicaciones");
+            }
+            if (utn_getName(bufferAnswer, 10, "\n\nDesea borrar? Se eliminaran los avisos que el cliente tenga. "
+                            "Debe ingresar 'Si' para proceder con la baja: ", "\nError,ingrese una respuesta valida.", 3) == SUCCESS
+                    && strncasecmp(bufferAnswer, "si", 10) == 0)
+            {
+                bufferRemovePubli = publi_remove(listPublication, lenPubli, listClient, lenClient, bufferId);
+                if((bufferRemovePubli == SUCCESS || bufferRemovePubli  == -2) && cli_remove(listClient, lenClient, bufferId) == SUCCESS)
+                {
+                    result = SUCCESS;
+                }
+            }
+        }
+    }
+    return result;
 }
 
 /**
@@ -66,30 +69,29 @@ int client_removeClient(Client* listClient[],int lenClient, Publication* listPub
  */
 int client_printClientInformation(Publication *listPublication[], int lenPubli, Client* listClient[], int lenClient, int id)
 {
-	int result = ERROR;
-	int index;
-	int i;
+    int result = ERROR;
+    int index;
+    int i;
 
-	if (listClient != NULL && lenClient > 0 && listPublication != NULL && lenPubli > 0)
-	{
-		index = publi_findById(listPublication,lenPubli,id);
-		if(index != ERROR)
-		{
-			printf("\nInformacion del cliente: \n");
-			printf("\n%10s %15s %15s %35s\n", "ID CLIENTE", "NOMBRE", "APELLIDO","CUIT");
-			for(i=0;i<lenClient;i++)
-			{
-				printf("compraro idCliente publi %d con idCliente cliente %d",listPublication[index]->idClient,listClient[i]->idClient);
-				if(listPublication[index]->idClient == listClient[i]->idClient)
-				{
-					cli_printOne(listClient[i]);
-					result = SUCCESS;
-					break;
-				}
-			}
-		}
-	}
-	return result;
+    if (listClient != NULL && lenClient > 0 && listPublication != NULL && lenPubli > 0)
+    {
+        index = publi_findById(listPublication,lenPubli,id);
+        if(index != ERROR)
+        {
+            printf("\nInformacion del cliente: \n");
+            printf("\n%10s %15s %15s %35s\n", "ID CLIENTE", "NOMBRE", "APELLIDO","CUIT");
+            for(i=0; i<lenClient; i++)
+            {
+                if(listPublication[index]->idClient == listClient[i]->idClient)
+                {
+                    cli_printOne(listClient[i]);
+                    result = SUCCESS;
+                    break;
+                }
+            }
+        }
+    }
+    return result;
 }
 
 /**
@@ -103,25 +105,25 @@ int client_printClientInformation(Publication *listPublication[], int lenPubli, 
  */
 int publication_pause(Client* listClient[],int lenClient, Publication* listPublication[], int lenPubli)
 {
-	int result = ERROR;
-	int bufferId;
-	char bufferAnswer[10];
+    int result = ERROR;
+    int bufferId;
+    char bufferAnswer[10];
 
-	if (listClient != NULL && lenClient > 0 && listPublication != NULL && lenPubli > 0)
-	{
-		if( publi_printList(listPublication, lenPubli) == SUCCESS
-				&& utn_getNumber(&bufferId, "\n\nIngrese el id de la publicacion que quiere pausar: ", "\nError", 0, INT_MAX, 3) == SUCCESS
-				&& publi_findById(listPublication, lenPubli,bufferId)!= ERROR
-				&& publi_isActive(listPublication,lenPubli,bufferId)
-				&& client_printClientInformation(listPublication,lenPubli,listClient,lenClient,bufferId) == SUCCESS
-				&& utn_getName(bufferAnswer,10,"\n\nEsta seguro de que quiere pausar esta publicacion? Debe ingresar 'Si' para proceder: ", "\nError,ingrese una respuesta valida.",3) == SUCCESS
-				&& strncasecmp(bufferAnswer,"si",10)==0
-				&& publi_pauseOrActivatePublication(listPublication, lenPubli,bufferId,PAUSED) == SUCCESS)
-		{
-			result = SUCCESS;
-		}
-	}
-	return result;
+    if (listClient != NULL && lenClient > 0 && listPublication != NULL && lenPubli > 0)
+    {
+        if( publi_printList(listPublication, lenPubli) == SUCCESS
+                && utn_getNumber(&bufferId, "\n\nIngrese el id de la publicacion que quiere pausar: ", "\nError", 0, INT_MAX, 3) == SUCCESS
+                && publi_findById(listPublication, lenPubli,bufferId)!= ERROR
+                && publi_isActive(listPublication,lenPubli,bufferId)
+                && client_printClientInformation(listPublication,lenPubli,listClient,lenClient,bufferId) == SUCCESS
+                && utn_getName(bufferAnswer,10,"\n\nEsta seguro de que quiere pausar esta publicacion? Debe ingresar 'Si' para proceder: ", "\nError,ingrese una respuesta valida.",3) == SUCCESS
+                && strncasecmp(bufferAnswer,"si",10)==0
+                && publi_pauseOrActivatePublication(listPublication, lenPubli,bufferId,PAUSED) == SUCCESS)
+        {
+            result = SUCCESS;
+        }
+    }
+    return result;
 }
 
 /**
@@ -135,25 +137,25 @@ int publication_pause(Client* listClient[],int lenClient, Publication* listPubli
  */
 int publication_reactivate(Client* listClient[],int lenClient, Publication* listPublication[], int lenPubli)
 {
-	int result = ERROR;
-	int bufferId;
-	char bufferAnswer[10];
+    int result = ERROR;
+    int bufferId;
+    char bufferAnswer[10];
 
-	if (listClient != NULL && lenClient > 0 && listPublication != NULL && lenPubli > 0)
-	{
-		if( publi_printList(listPublication, lenPubli) == SUCCESS
-				&& utn_getNumber(&bufferId, "\n\nIngrese el id de la publicacion que quiere activar: ", "\nError", 0, INT_MAX, 3) == SUCCESS
-				&& publi_findById(listPublication, lenPubli,bufferId)!= ERROR
-				//&& publi_isActive(listPublication,lenPubli,bufferId) == FALSE
-				&& client_printClientInformation(listPublication,lenPubli,listClient,lenClient,bufferId) == SUCCESS
-				&& utn_getName(bufferAnswer,10,"\n\nEsta seguro de que quiere activar esta publicacion? Debe ingresar 'Si' para proceder: ", "\nError,ingrese una respuesta valida.",3) == SUCCESS
-				&& strncasecmp(bufferAnswer,"si",10)==0
-				&& publi_pauseOrActivatePublication(listPublication, lenPubli,bufferId,ACTIVE) == SUCCESS)
-		{
-			result = SUCCESS;
-		}
-	}
-	return result;
+    if (listClient != NULL && lenClient > 0 && listPublication != NULL && lenPubli > 0)
+    {
+        if( publi_printList(listPublication, lenPubli) == SUCCESS
+                && utn_getNumber(&bufferId, "\n\nIngrese el id de la publicacion que quiere activar: ", "\nError", 0, INT_MAX, 3) == SUCCESS
+                && publi_findById(listPublication, lenPubli,bufferId)!= ERROR
+                && publi_isActive(listPublication,lenPubli,bufferId) == FALSE
+                && client_printClientInformation(listPublication,lenPubli,listClient,lenClient,bufferId) == SUCCESS
+                && utn_getName(bufferAnswer,10,"\n\nEsta seguro de que quiere activar esta publicacion? Debe ingresar 'Si' para proceder: ", "\nError,ingrese una respuesta valida.",3) == SUCCESS
+                && strncasecmp(bufferAnswer,"si",10)==0
+                && publi_pauseOrActivatePublication(listPublication, lenPubli,bufferId,ACTIVE) == SUCCESS)
+        {
+            result = SUCCESS;
+        }
+    }
+    return result;
 }
 
 /**
@@ -167,28 +169,31 @@ int publication_reactivate(Client* listClient[],int lenClient, Publication* list
  */
 int clientPublication_printClientAndPublications(Publication *listPublication[], int lenPubli, Client* listClient[], int lenClient)
 {
-	int result = ERROR;
-	int i;
-	int counter;
+    int result = ERROR;
+    int i;
+    int counter;
 
-	if (listClient != NULL && lenClient > 0 && listPublication != NULL && lenPubli > 0)
-	{
-		for (i = 0; i < lenClient; i++)
-		{
-			if (listClient[i] != NULL)
-			{
-				printf("\n\n%10s %15s %15s %35s\n", "ID CLIENTE", "NOMBRE",	"APELLIDO", "CUIT");
-				cli_printOne(listClient[i]);
-				if (clientPublication_printAndCountActivePublicationsById(listPublication, lenPubli, listClient[i]->idClient, &counter)) {
-					printf("\nCantidad de avisos activos: %d\n", counter);
-				} else {
-					printf("\nNo tiene avisos");
-				}
-			}
-		}
-		result = SUCCESS;
-	}
-	return result;
+    if (listClient != NULL && lenClient > 0 && listPublication != NULL && lenPubli > 0)
+    {
+        for (i = 0; i < lenClient; i++)
+        {
+            if (listClient[i] != NULL)
+            {
+                printf("\n\n%10s %15s %15s %35s\n", "ID CLIENTE", "NOMBRE",	"APELLIDO", "CUIT");
+                cli_printOne(listClient[i]);
+                if (clientPublication_printAndCountActivePublicationsById(listPublication, lenPubli, listClient[i]->idClient, &counter))
+                {
+                    printf("\nCantidad de avisos activos: %d\n", counter);
+                }
+                else
+                {
+                    printf("\nNo tiene avisos");
+                }
+            }
+        }
+        result = SUCCESS;
+    }
+    return result;
 }
 
 
@@ -202,23 +207,23 @@ int clientPublication_printClientAndPublications(Publication *listPublication[],
  */
 int clientPublication_printAndCountActivePublicationsById(Publication *listPublication[], int lenPubli, int id, int* qty)
 {
-	int result = FALSE;
-	int j;
-	int counter = 0;
+    int result = FALSE;
+    int j;
+    int counter = 0;
 
-	if (listPublication != NULL && lenPubli > 0 && id > 0 && qty != NULL)
-	{
-		printf("\n\n%10s %15s %15s %35s %20s\n", "ID PUBLI", "RUBRO", "ID CLIENTE", "TEXTO AVISO", "ESTADO");
-		for (j = 0; j < lenPubli; j++)
-		{
-			if (listPublication[j] != NULL	&& listPublication[j]->state == ACTIVE && listPublication[j]->idClient == id)
-			{
-				publi_printOne(listPublication[j]);
-				result = TRUE;
-				counter++;
-			}
-		}
-		*qty = counter;
-	}
-	return result;
+    if (listPublication != NULL && lenPubli > 0 && id > 0 && qty != NULL)
+    {
+        printf("\n\n%10s %15s %15s %35s %20s\n", "ID PUBLI", "RUBRO", "ID CLIENTE", "TEXTO AVISO", "ESTADO");
+        for (j = 0; j < lenPubli; j++)
+        {
+            if (listPublication[j] != NULL	&& listPublication[j]->state == ACTIVE && listPublication[j]->idClient == id)
+            {
+                publi_printOne(listPublication[j]);
+                result = TRUE;
+                counter++;
+            }
+        }
+        *qty = counter;
+    }
+    return result;
 }

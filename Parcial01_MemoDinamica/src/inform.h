@@ -9,10 +9,11 @@
 #define INFORM_H_
 #include "ClientPublication.h"
 
-typedef struct {
-	int rubro;
-	int isEmpty;
-}Rubro;
+typedef struct
+{
+    int rubro;
+    int isEmpty;
+} Rubro;
 
 int info_subMenu(Publication *listPublication[], int lenPubli, Client* listClient[], int lenClient);
 int info_findIndexClientWithMorePublications(Publication *listPublication[], int lenPubli, Client* listClient[], int lenClient, int* qtyAds);

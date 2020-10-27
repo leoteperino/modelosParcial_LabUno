@@ -16,18 +16,30 @@
 #define NAME_LEN 51
 #define CUIT_LEN 20
 
-typedef struct {
-	char name[NAME_LEN];
-	char lastName[NAME_LEN];
-	char cuit[CUIT_LEN];
-	int idClient;
-	//int isEmpty;
-}Client;
+typedef struct
+{
+    char name[NAME_LEN];
+    char lastName[NAME_LEN];
+    char cuit[CUIT_LEN];
+    int idClient;
+    //int isEmpty;
+} Client;
 
 
 Client* cli_newParametres(char* name, char* lastName, char* cuit, int idClient);
 Client* cli_new(void);
 void cli_delete(Client* pc);
+
+int cli_setName(Client* this, char* name);
+int cli_getName(Client* this, char* name);
+int cli_setLastName(Client* this, char* lastName);
+int cli_getLastName(Client* this, char* lastName);
+int cli_setCuit(Client* this, char* cuit);
+int cli_getCuit(Client* this, char* cuit);
+int cli_setIdTxt(Client* this, char* id);
+int cli_getIdTxt(Client* this, char* id);
+
+/*********************************************************************/
 
 int cli_initArray(Client *list[], int len);
 int cli_findEmptyIndex(Client *list[], int len);

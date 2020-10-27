@@ -12,14 +12,15 @@
 #define ACTIVE 1
 #define PAUSED 0
 
-typedef struct {
-	int idClient;
-	int rubro;
-	char advertisementText[ADV_LEN];
-	int idPublication;
-	int isEmpty;
-	int state;
-}Publication;
+typedef struct
+{
+    int idClient;
+    int rubro;
+    char advertisementText[ADV_LEN];
+    int idPublication;
+   // int isEmpty;
+    int state;
+} Publication;
 
 Publication* publi_new(void);
 void publi_delete(Publication* pc);

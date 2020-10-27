@@ -30,149 +30,159 @@ static int validationAlphanumericDots(char* string);
 
 int utn_getNumber(int *pNumber, char *message, char *errorMessage, int min,	int max, int retries)
 {
-	int result = ERROR;
-	int auxInt;
+    int result = ERROR;
+    int auxInt;
 
-	if (pNumber != NULL && message != NULL && errorMessage != NULL && min < max && max > min && retries > 0)
-	{
-		while (retries > 0)
-		{
-			printf("%s", message);
-			if (getInt(&auxInt) == ERROR || (auxInt < min || auxInt > max))
-			{
-				printf("%s", errorMessage);
-				retries--;
-			} else {
-				*pNumber = auxInt;
-				result = SUCCESS;
-				break;
-			}
-		}
-	}
-	return result;
+    if (pNumber != NULL && message != NULL && errorMessage != NULL && min < max && max > min && retries > 0)
+    {
+        while (retries > 0)
+        {
+            printf("%s", message);
+            if (getInt(&auxInt) == ERROR || (auxInt < min || auxInt > max))
+            {
+                printf("%s", errorMessage);
+                retries--;
+            }
+            else
+            {
+                *pNumber = auxInt;
+                result = SUCCESS;
+                break;
+            }
+        }
+    }
+    return result;
 }
 
 int utn_getFloatNumber(float *pNumber, char *message, char *errorMessage,float min, float max, int retries)
 {
-	int result = ERROR;
-	float auxFloat;
+    int result = ERROR;
+    float auxFloat;
 
-	if (pNumber != NULL && message != NULL && errorMessage != NULL && min < max	&& max > min && retries > 0)
-	{
-		while (retries > 0)
-		{
-			printf("%s", message);
-			if (getFloat(&auxFloat) == ERROR || (auxFloat < min || auxFloat > max))
-			{
-				printf("%s", errorMessage);
-				retries--;
-			} else {
-				*pNumber = auxFloat;
-				result = SUCCESS;
-				break;
-			}
-		}
-	}
-	return result;
+    if (pNumber != NULL && message != NULL && errorMessage != NULL && min < max	&& max > min && retries > 0)
+    {
+        while (retries > 0)
+        {
+            printf("%s", message);
+            if (getFloat(&auxFloat) == ERROR || (auxFloat < min || auxFloat > max))
+            {
+                printf("%s", errorMessage);
+                retries--;
+            }
+            else
+            {
+                *pNumber = auxFloat;
+                result = SUCCESS;
+                break;
+            }
+        }
+    }
+    return result;
 }
 
 int utn_getName(char* name, int len, char* message, char* errorMessage, int retries)
 {
-	int result = ERROR;
-	char auxName[4096];
+    int result = ERROR;
+    char auxName[4096];
 
-	if(name!=NULL && message!=NULL && errorMessage!=NULL && retries>0)
-	{
-		while(retries>0)
-		{
-			printf("%s",message);
-			if(getText(auxName,sizeof(auxName))==SUCCESS && strnlen(auxName,sizeof(auxName))<len)
-			{
-				result = SUCCESS;
-				strncpy(name,auxName,len);
-				break;
-			}
-			else
-			{
-				printf("%s",errorMessage);
-				retries--;
-			}
-		}
-	}
-	return result;
+    if(name!=NULL && message!=NULL && errorMessage!=NULL && retries>0)
+    {
+        while(retries>0)
+        {
+            printf("%s",message);
+            if(getText(auxName,sizeof(auxName))==SUCCESS && strnlen(auxName,sizeof(auxName))<len)
+            {
+                result = SUCCESS;
+                strncpy(name,auxName,len);
+                break;
+            }
+            else
+            {
+                printf("%s",errorMessage);
+                retries--;
+            }
+        }
+    }
+    return result;
 }
 
 int utn_getAlphanumeric(char *name, int len, char *message, char *errorMessage, int retries)
 {
-	int result = ERROR;
-	char auxName[4096];
+    int result = ERROR;
+    char auxName[4096];
 
-	if (name != NULL && message != NULL && errorMessage != NULL && retries > 0)
-	{
-		while (retries > 0)
-		{
-			printf("%s", message);
-			if (getAlphaNumeric(auxName, sizeof(auxName)) == SUCCESS && strnlen(auxName, sizeof(auxName)) < len)
-			{
-				result = SUCCESS;
-				strncpy(name, auxName, len);
-				break;
-			} else {
-				printf("%s", errorMessage);
-				retries--;
-			}
-		}
-	}
-	return result;
+    if (name != NULL && message != NULL && errorMessage != NULL && retries > 0)
+    {
+        while (retries > 0)
+        {
+            printf("%s", message);
+            if (getAlphaNumeric(auxName, sizeof(auxName)) == SUCCESS && strnlen(auxName, sizeof(auxName)) < len)
+            {
+                result = SUCCESS;
+                strncpy(name, auxName, len);
+                break;
+            }
+            else
+            {
+                printf("%s", errorMessage);
+                retries--;
+            }
+        }
+    }
+    return result;
 }
 
 
 int utn_getMail(char *name, int len, char *message, char *errorMessage, int retries)
 {
-	int result = ERROR;
-	char auxName[4096];
+    int result = ERROR;
+    char auxName[4096];
 
-	if (name != NULL && message != NULL && errorMessage != NULL	&& retries > 0)
-	{
-		while (retries > 0)
-		{
-			printf("%s", message);
-			if (getMail(auxName, sizeof(auxName)) == SUCCESS && strnlen(auxName, sizeof(auxName)) < len)
-			{
-				result = SUCCESS;
-				strncpy(name, auxName, len);
-				break;
-			} else {
-				printf("%s", errorMessage);
-				retries--;
-			}
-		}
-	}
-	return result;
+    if (name != NULL && message != NULL && errorMessage != NULL	&& retries > 0)
+    {
+        while (retries > 0)
+        {
+            printf("%s", message);
+            if (getMail(auxName, sizeof(auxName)) == SUCCESS && strnlen(auxName, sizeof(auxName)) < len)
+            {
+                result = SUCCESS;
+                strncpy(name, auxName, len);
+                break;
+            }
+            else
+            {
+                printf("%s", errorMessage);
+                retries--;
+            }
+        }
+    }
+    return result;
 }
 
 int utn_getIdentityDocument(char *name, int len, char *message, char *errorMessage, int retries)
 {
-	int result = ERROR;
-	char auxName[4096];
+    int result = ERROR;
+    char auxName[4096];
 
-	if (name != NULL && message != NULL && errorMessage != NULL	&& retries > 0)
-	{
-		while (retries > 0)
-		{
-			printf("%s", message);
-			if (getAlphanumericDots(auxName, sizeof(auxName)) == SUCCESS && strnlen(auxName, sizeof(auxName)) < len)
-			{
-				result = SUCCESS;
-				strncpy(name, auxName, len);
-				break;
-			} else {
-				printf("%s", errorMessage);
-				retries--;
-			}
-		}
-	}
-	return result;
+    if (name != NULL && message != NULL && errorMessage != NULL	&& retries > 0)
+    {
+        while (retries > 0)
+        {
+            printf("%s", message);
+            if (getAlphanumericDots(auxName, sizeof(auxName)) == SUCCESS && strnlen(auxName, sizeof(auxName)) < len)
+            {
+                result = SUCCESS;
+                strncpy(name, auxName, len);
+                break;
+            }
+            else
+            {
+                printf("%s", errorMessage);
+                retries--;
+            }
+        }
+    }
+    return result;
 }
 
 
@@ -184,33 +194,34 @@ int utn_getIdentityDocument(char *name, int len, char *message, char *errorMessa
  * \param int len, size of the string that it receives
  * \return (-1) ERROR (0) SUCCESS
  */
-static int getString(char *string, int len) {
+static int getString(char *string, int len)
+{
 
-	int result = ERROR;
-	char aux[4096];
+    int result = ERROR;
+    char aux[4096];
 
-	if (string != NULL && len > 0)
-	{
-		//fflush(stdin); //WINDOWS
-		//__fpurge(stdin); //LINUX
-		fpurge(stdin); //MACOS
-		fgets(aux, sizeof(aux), stdin);
-		if(aux[strnlen(aux, sizeof(aux)) - 1] == '\n')
-		{
-			aux[strnlen(aux, sizeof(aux)) - 1] = '\0';
-		}
+    if (string != NULL && len > 0)
+    {
+        fflush(stdin); //WINDOWS
+        //__fpurge(stdin); //LINUX
+        //fpurge(stdin); //MACOS
+        fgets(aux, sizeof(aux), stdin);
+        if(aux[strnlen(aux, sizeof(aux)) - 1] == '\n')
+        {
+            aux[strnlen(aux, sizeof(aux)) - 1] = '\0';
+        }
 
-		if(aux[0] == '\0')
-		{
-			result = ERROR;
-		}
-		else if(strnlen(aux, sizeof(aux)) <= len)
-		{
-			strncpy(string, aux, len);
-			result = SUCCESS;
-		}
-	}
-	return result;
+        if(aux[0] == '\0')
+        {
+            result = ERROR;
+        }
+        else if(strnlen(aux, sizeof(aux)) <= len)
+        {
+            strncpy(string, aux, len);
+            result = SUCCESS;
+        }
+    }
+    return result;
 }
 
 /**
@@ -337,7 +348,7 @@ static int getAlphanumericDots(char* text, int len)
         }
     }
     return result;
- }
+}
 
 
 //////////////Functions that validates data////////////////
@@ -363,7 +374,7 @@ static int validationInt(char* num)
         {
             if(num[i] < '0' || num[i] > '9')
             {
-            	result = ERROR;
+                result = ERROR;
                 break;
             }
         }
@@ -395,16 +406,16 @@ static int validationFloat(char* num)
             {
                 if(num[i] == '.')
                 {
-                	counterDot++;
+                    counterDot++;
                     if(counterDot>1)
                     {
-                    	result = ERROR;
+                        result = ERROR;
                         break;
                     }
                 }
                 else
                 {
-                	result = ERROR;
+                    result = ERROR;
                     break;
                 }
             }
@@ -428,14 +439,14 @@ static int validationOnlyLetter(char* string)
 
     if(string!= NULL)
     {
-    	for(i=0; string[i]!= '\0'; i++)
-		{
-			if((string[i] < 'a' || string [i] > 'z') && (string[i] < 'A' || string[i] > 'Z') && (string[i] != ' '))
-			{
-				result = ERROR;
-				break;
-			}
-		}
+        for(i=0; string[i]!= '\0'; i++)
+        {
+            if((string[i] < 'a' || string [i] > 'z') && (string[i] < 'A' || string[i] > 'Z') && (string[i] != ' '))
+            {
+                result = ERROR;
+                break;
+            }
+        }
     }
     return result;
 }
@@ -453,14 +464,14 @@ static int validationAlphaNumeric(char* string)
 
     if(string!= NULL)
     {
-    	for(i=0; string[i]!= '\0'; i++)
-		{
-			if((string[i] < 'a' || string [i] > 'z') && (string[i] < 'A' || string[i] > 'Z') && (string[i] != ' ') && (string[i] < '0' || string[i] > '9'))
-			{
-				result = ERROR;
-				break;
-			}
-		}
+        for(i=0; string[i]!= '\0'; i++)
+        {
+            if((string[i] < 'a' || string [i] > 'z') && (string[i] < 'A' || string[i] > 'Z') && (string[i] != ' ') && (string[i] < '0' || string[i] > '9'))
+            {
+                result = ERROR;
+                break;
+            }
+        }
     }
     return result;
 }
@@ -478,27 +489,27 @@ static int validationMail(char* string)
 
     if(string!= NULL)
     {
-    	for(i=0; string[i]!= '\0'; i++)
-		{
-    		if((string[i] < 'a' || string [i] > 'z') && (string[i] < 'A' || string[i] > 'Z')  && (string[i] < '0' || string[i] > '9')
-    							&& (string[i] != '.' || string[0] == '.') && (string[i] != '-' || string[0] == '-') && (string[i] != '_' || string[0] == '_'))
-			{
-    			if(string[i] == '@')
-				{
-					counterAt++;
-					if(counterAt>1 || string[0] == '@')
-					{
-						result = ERROR;
-						break;
-					}
-				}
-				else
-				{
-					result = ERROR;
-					break;
-				}
-			}
-		}
+        for(i=0; string[i]!= '\0'; i++)
+        {
+            if((string[i] < 'a' || string [i] > 'z') && (string[i] < 'A' || string[i] > 'Z')  && (string[i] < '0' || string[i] > '9')
+                    && (string[i] != '.' || string[0] == '.') && (string[i] != '-' || string[0] == '-') && (string[i] != '_' || string[0] == '_'))
+            {
+                if(string[i] == '@')
+                {
+                    counterAt++;
+                    if(counterAt>1 || string[0] == '@')
+                    {
+                        result = ERROR;
+                        break;
+                    }
+                }
+                else
+                {
+                    result = ERROR;
+                    break;
+                }
+            }
+        }
     }
     return result;
 }
@@ -515,15 +526,15 @@ static int validationAlphanumericDots(char* string)
 
     if(string!= NULL)
     {
-    	for(i=0; string[i]!= '\0'; i++)
-		{
-			if((string[i] < 'a' || string [i] > 'z') && (string[i] < 'A' || string[i] > 'Z')  && (string[i] < '0' || string[i] > '9')
-					&& (string[i] != '.' || string[0] == '.') && (string[i] != '-' || string[0] == '-'))
-			{
-				result = ERROR;
-				break;
-			}
-		}
+        for(i=0; string[i]!= '\0'; i++)
+        {
+            if((string[i] < 'a' || string [i] > 'z') && (string[i] < 'A' || string[i] > 'Z')  && (string[i] < '0' || string[i] > '9')
+                    && (string[i] != '.' || string[0] == '.') && (string[i] != '-' || string[0] == '-'))
+            {
+                result = ERROR;
+                break;
+            }
+        }
     }
     return result;
 }
