@@ -133,6 +133,7 @@ int cli_getIdTxt(Client* this, char* id)
     }
     return result;
 }
+// armar el get id como int
 
 /******************************VALIDATIONS*********************************/
 
@@ -308,7 +309,7 @@ int cli_loadAndAddData(Client *list[], int len)
                     && utn_getIdentityDocument(bufferClient.cuit, CUIT_LEN, "\nIngrese cuit: ", "\nError!", 3) == SUCCESS)
             {
                 bufferClient.idClient = generateNewId();
-                *this = bufferClient;
+                *this = bufferClient;//asignar campo por campo
                 list[index] = this;
                 result = index;//SUCCESS;
             }
