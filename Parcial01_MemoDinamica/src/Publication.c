@@ -11,30 +11,174 @@
 #include "inputs.h"
 #include "Publication.h"
 
-/**
- * \brief
- *
- * \param
- * \param
- * \return Publication
- */
 Publication* publi_new(void)
 {
-    return (Publication*) malloc(sizeof(Publication));
+    return (Publication*)malloc(sizeof(Publication));
 }
 
-/**
- * \brief
- *
- * \param
- * \param
- * \return
- */
-void publi_delete(Publication* pc)
+void publi_delete(Publication* pPubli)
 {
-    if(pc!=NULL)
-        free(pc);
+    if (pPubli != NULL)
+        free(pPubli);
 }
+
+/******************************** SETTERS AND GETTERS ***********************************************/
+
+int publi_setRubro(Publication* this, int rubro)
+{
+    int result = ERROR;
+    if (this != NULL && rubro >=0)
+    {
+        this->rubro = rubro;
+        result = SUCCESS;
+    }
+    return result;
+}
+
+int publi_getRubro(Publication* this, int* rubro)
+{
+    int result = ERROR;
+    if (this != NULL && rubro != NULL)
+    {
+        *rubro = this->rubro;
+        result = SUCCESS;
+    }
+    return result;
+}
+
+int publi_setAdvTxt(Publication* this, char* advTxt)
+{
+    int result = ERROR;
+    if(this != NULL && advTxt != NULL && isValidAlphaNumeric(advTxt,NAME_LEN))
+    {
+        strncpy(this->advertisementText, advTxt,(int)sizeof(this->advertisementText));
+        result = SUCCESS;
+    }
+    return result;
+}
+
+int publi_getAdvTxt(Publication* this, char* advTxt)
+{
+    int result = ERROR;
+    if(this != NULL && advTxt != NULL)
+    {
+        strncpy(advTxt, this->advertisementText, (int)sizeof(advTxt));
+        result = SUCCESS;
+    }
+    return result;
+}
+
+int publi_setState(Publication* this, int state)
+{
+    int result = ERROR;
+    if (this != NULL && (state == 1 || state == 0))
+    {
+        this->state = state;
+        result = SUCCESS;
+    }
+    return result;
+}
+
+int publi_getState(Publication* this, int* state)
+{
+    int result = ERROR;
+    if (this != NULL && state != NULL)
+    {
+        *state = this->state;
+        result = SUCCESS;
+    }
+    return result;
+}
+
+int publi_setIdTxt(Publication* this, char* id)
+{
+    int result = ERROR;
+    if (this != NULL && id != NULL && isValidNumber(id, 1000))
+    {
+        this->idPublication = atoi(id);
+        result = SUCCESS;
+    }
+    return result;
+}
+
+int publi_getIdTxt(Publication* this, char* id)
+{
+    int result = ERROR;
+    if (this != NULL && id != NULL)
+    {
+        sprintf(id, "%d", this->idPublication);
+        result = SUCCESS;
+    }
+    return result;
+}
+
+int publi_setId(Publication* this, int id)
+{
+    int result = ERROR;
+    if (this != NULL && id >= 0)
+    {
+        this->idPublication = id;
+        result = SUCCESS;
+    }
+    return result;
+}
+
+int publi_getId(Publication* this, int* id)
+{
+    int result = ERROR;
+    if (this != NULL && id != NULL)
+    {
+        *id = this->idPublication;
+        result = SUCCESS;
+    }
+    return result;
+}
+
+int publi_setIdTxtClient(Publication* this, char* id)
+{
+    int result = ERROR;
+    if (this != NULL && id != NULL && isValidNumber(id, 1000))
+    {
+        this->idClient = atoi(id);
+        result = SUCCESS;
+    }
+    return result;
+}
+
+int publi_getIdTxtClient(Publication* this, char* id)
+{
+    int result = ERROR;
+    if (this != NULL && id != NULL)
+    {
+        sprintf(id, "%d", this->idClient);
+        result = SUCCESS;
+    }
+    return result;
+}
+
+int publi_setIdClient(Publication* this, int id)
+{
+    int result = ERROR;
+    if (this != NULL && id >=0)
+    {
+        this->idClient = id;
+        result = SUCCESS;
+    }
+    return result;
+}
+
+int publi_getIdClient(Publication* this, int* id)
+{
+    int result = ERROR;
+    if (this != NULL && id != NULL)
+    {
+        *id = this->idClient;
+        result = SUCCESS;
+    }
+    return result;
+}
+
+/**********************************PUBLICATIONS FUNCTIONS*****************************/
 
 /**
  * \brief To indicate that all position in the array are empty
@@ -42,7 +186,7 @@ void publi_delete(Publication* pc)
  * \param len int Array length
  * \return int Return (-1) if Error [Invalid length or NULL pointer] - (0) if Ok
  */
-int publi_initArray(Publication *list[], int len)
+    int publi_initArray(Publication* list[], int len)
 {
     int result = ERROR;
     int i;
@@ -67,7 +211,7 @@ int publi_initArray(Publication *list[], int len)
  * \return int Return value of the first empty index found -
  * 			   or (-1) if Error [Invalid length, NULL pointer or if there isn't more avaible space]
  */
-int publi_findEmptyIndex(Publication *list[], int len)
+int publi_findEmptyIndex(Publication* list[], int len)
 {
     int result = ERROR;
     int i;
@@ -108,41 +252,46 @@ static int generateNewId(void)
  * 				  (-2) if Error - wrong entry of the fields
  * 				  or publication index position where it was charged
  */
-int publi_loadAndAddData(Publication *listPubli[], int lenPubli, Client *listClient[], int lenClient)
+int publi_loadAndAddData(Publication* listPubli[], int lenPubli, Client* listClient[], int lenClient)
 {
     int result = ERROR;
     Publication bufferPubli;
     int index;
-    Publication* this;
+    Publication* pPubli;
 
     if (listPubli != NULL && lenPubli > 0 && listClient != NULL && lenClient > 0)
     {
-        this = publi_new();
-        if(this!=NULL)
+        pPubli = publi_new();
+        if (pPubli != NULL)
         {
             index = publi_findEmptyIndex(listPubli, lenPubli);
             if (index != ERROR
-                    && cli_printList(listClient, lenClient) == SUCCESS
-                    && utn_getNumber(&bufferPubli.idClient, "\nIngrese el id del cliente para realizar la publicacion: ", "\nError", 0, INT_MAX, 3) == SUCCESS
-                    && cli_findById(listClient, lenClient, bufferPubli.idClient)!=ERROR
-                    && utn_getNumber(&bufferPubli.rubro,"\nIngrese numero de rubro: ","\nError",0,INT_MAX,3) == SUCCESS
-                    && utn_getAlphanumeric(bufferPubli.advertisementText,ADV_LEN,"\nIngrese el texto del aviso: \n","\nError!",3) == SUCCESS)
+                && cli_printList(listClient, lenClient) == SUCCESS
+                && utn_getNumber(&bufferPubli.idClient, "\nIngrese el id del cliente para realizar la publicacion: ", "\nError", 0, INT_MAX, 3) == SUCCESS
+                && cli_findById(listClient, lenClient, bufferPubli.idClient) != ERROR
+                && utn_getNumber(&bufferPubli.rubro, "\nIngrese numero de rubro: ", "\nError", 0, INT_MAX, 3) == SUCCESS
+                && utn_getAlphanumeric(bufferPubli.advertisementText, ADV_LEN, "\nIngrese el texto del aviso: \n", "\nError!", 3) == SUCCESS)
             {
                 bufferPubli.state = ACTIVE;
                 bufferPubli.idPublication = generateNewId();
-                *this = bufferPubli;
-                listPubli[index] = this;
-                result = index;//SUCCESS;
+                publi_setIdClient(pPubli,bufferPubli.idClient);
+                publi_setRubro(pPubli,bufferPubli.rubro);
+                publi_setAdvTxt(pPubli,bufferPubli.advertisementText);
+                publi_setId(pPubli,bufferPubli.idPublication);
+                publi_setState(pPubli,bufferPubli.state);
+                listPubli[index] = pPubli;
+                result = index; //SUCCESS;
             }
             else
             {
                 result = -2;
-                publi_delete(this);
+                publi_delete(pPubli);
             }
         }
     }
     return result;
 }
+
 /**
  * \brief Searches the position in which is the client id
  * \param list Publication* Pointer to array of publications
@@ -150,16 +299,18 @@ int publi_loadAndAddData(Publication *listPubli[], int lenPubli, Client *listCli
  * \param id int, id searched
  * \return Return publication index position or (-1) if [Invalid length or NULL pointer received or client not found]
  */
-int publi_findByIdClient(Publication *list[], int len, int id)
+int publi_findByIdClient(Publication* list[], int len, int id)
 {
     int result = ERROR;
     int i;
+    int bufferId;
 
     if (list != NULL && len > 0 && id > 0)
     {
         for (i = 0; i < len; i++)
         {
-            if (list[i]!= NULL && list[i]->idClient == id)
+            publi_getIdClient(list[i],&bufferId);
+            if (list[i] != NULL && bufferId == id)
             {
                 result = i;
                 break;
@@ -176,16 +327,18 @@ int publi_findByIdClient(Publication *list[], int len, int id)
  * \param id int, id searched
  * \return Return publication index position or (-1) if [Invalid length or NULL pointer received or publication not found]
  */
-int publi_findById(Publication *list[], int len, int id)
+int publi_findById(Publication* list[], int len, int id)
 {
     int result = ERROR;
     int i;
+    int bufferId;
 
     if (list != NULL && len > 0 && id > 0)
     {
         for (i = 0; i < len; i++)
         {
-            if (list[i]!= NULL && list[i]->idPublication == id)
+            publi_getId(list[i],&bufferId);
+            if (list[i] != NULL && bufferId == id)
             {
                 result = i;
                 break;
@@ -206,15 +359,15 @@ int publi_findById(Publication *list[], int len, int id)
  * 					  (0) if Ok
  * 					  (-2) if it can't find the id client
  */
-int publi_remove(Publication *list[], int len, Client* listClient[], int lenClient, int id)
+int publi_remove(Publication* list[], int len, Client* listClient[], int lenClient, int id)
 {
     int result = ERROR;
     int index;
 
     if (list != NULL && len > 0 && listClient != NULL && lenClient > 0 && id > 0)
     {
-        index = publi_findByIdClient(list,len,id);
-        if(list != NULL && index != ERROR)
+        index = publi_findByIdClient(list, len, id);
+        if (list != NULL && index != ERROR)
         {
             publi_delete(list[index]);
             list[index] = NULL;
@@ -237,23 +390,29 @@ int publi_printOne(Publication* listPubli)
 {
     int result = ERROR;
     char state[10];
+    Publication buffer;
 
     if (listPubli != NULL)
     {
-        if(listPubli->state == PAUSED)
+        publi_getId(listPubli,&buffer.idPublication);
+        publi_getIdClient(listPubli,&buffer.idClient);
+        publi_getRubro(listPubli,&buffer.rubro);
+        publi_getAdvTxt(listPubli,buffer.advertisementText);
+        publi_getState(listPubli,&buffer.state);
+        if (buffer.state == PAUSED)
         {
-            sprintf(state,"PAUSADO");
+            sprintf(state, "PAUSADO");
         }
-        else if(listPubli->state == ACTIVE)
+        else if (buffer.state == ACTIVE)
         {
-            sprintf(state,"ACTIVO");
+            sprintf(state, "ACTIVO");
         }
         printf("\n%10d %15d %15d %35s %20s\n",
-               listPubli->idPublication,
-               listPubli->rubro,
-               listPubli->idClient,
-               listPubli->advertisementText,
-               state);
+                buffer.idPublication,
+                buffer.rubro,
+                buffer.idClient,
+                buffer.advertisementText,
+                state);
         result = SUCCESS;
     }
     return result;
@@ -265,7 +424,7 @@ int publi_printOne(Publication* listPubli)
  * \param length int  Array length
  * \return int Return (-1) if Error [Invalid length or NULL pointer] - (0) if Ok
  */
-int publi_printList(Publication *list[], int len)
+int publi_printList(Publication* list[], int len)
 {
     int result = ERROR;
     int i;
@@ -289,17 +448,19 @@ int publi_printList(Publication *list[], int len)
  * \param id int, id received
  * \return int Return (-1) if Error [Invalid length or NULL pointer] - (0) if Ok
  */
-int publi_printListById(Publication *list[], int len,int id)
+int publi_printListById(Publication* list[], int len, int id)
 {
     int result = ERROR;
     int i;
+    int bufferId;
 
     if (list != NULL && len > 0 && id > 0)
     {
         printf("\n%10s %15s %15s %35s %20s\n", "ID PUBLI", "RUBRO", "ID CLIENTE", "TEXTO AVISO", "ESTADO");
         for (i = 0; i < len; i++)
         {
-            if (list[i]->idClient == id)
+            publi_getIdClient(list[i],&bufferId);
+            if (bufferId == id)
             {
                 publi_printOne(list[i]);
             }
@@ -316,7 +477,7 @@ int publi_printListById(Publication *list[], int len,int id)
  * \param len int Array length
  * \return int Returns TRUE(1) if there is data, if not, returns FALSE(0)
  */
-int publi_isAnyData(Publication *list[], int len)
+int publi_isAnyData(Publication* list[], int len)
 {
     int i;
     int result = FALSE;
@@ -325,7 +486,7 @@ int publi_isAnyData(Publication *list[], int len)
     {
         for (i = 0; i < len; i++)
         {
-            if(list[i] != NULL) //if there is data
+            if (list[i] != NULL) //if there is data
             {
                 result = TRUE;
                 break;
@@ -343,31 +504,32 @@ int publi_isAnyData(Publication *list[], int len)
 int publi_hardCodeData(Publication* list[])
 {
     int result = ERROR;
-    int idClient[] = {1,2,3,4,8,2,7,5,2,10,9,6,6};
-    int rubro[] = {11,11,22,11,22,33,55,33,44,44,55,66,22};
-    char advertisementText[][ADV_LEN] = {"Telefonos baratos","Eliminacion de monstruos","Se busca radio con antena",
-                                         "Carpas de Will, la mejor proteccion","Buenas vibras spa","La buena rula","Comida casera","Jardineria, corto su pasto",
-                                         "Compra luces de todos los colores","Nos comunicamos con el otro lado","Foto pro, la mejor foto de tu boda","Defensa de su hogar","Cuidado de niños"
-                                        };
+    int idClient[] = {1, 2, 3, 4, 8, 2, 7, 5, 2, 10, 9, 6, 6};
+    int rubro[] = {11, 11, 22, 11, 22, 33, 55, 33, 44, 44, 55, 66, 22};
+    char advertisementText[][ADV_LEN] = {"Telefonos baratos", "Eliminacion de monstruos", "Se busca radio con antena",
+                                         "Carpas de Will, la mejor proteccion", "Buenas vibras spa", "La buena rula", "Comida casera", "Jardineria, corto su pasto",
+                                         "Compra luces de todos los colores", "Nos comunicamos con el otro lado", "Foto pro, la mejor foto de tu boda", "Defensa de su hogar", "Cuidado de niños"};
     int i;
-    Publication* this;
+    int bufferId;
+    Publication* pPubli;
 
     if (list != NULL)
     {
         for (i = 0; i < 13; i++)
         {
-            this = publi_new();
-            if(this!=NULL)
+            pPubli = publi_new();
+            if (pPubli != NULL)
             {
-                this->idClient = idClient[i];
-                this->rubro = rubro[i];
-                strncpy(this->advertisementText,advertisementText[i],ADV_LEN);
-                this->idPublication = generateNewId();
-                this->state = ACTIVE;
-                list[i] = this;
+                publi_setIdClient(pPubli,idClient[i]);
+                bufferId=generateNewId();
+                publi_setId(pPubli,bufferId);
+                publi_setRubro(pPubli,rubro[i]);
+                publi_setAdvTxt(pPubli,advertisementText[i]);
+                publi_setState(pPubli,ACTIVE);
+                list[i] = pPubli;
             }
         }
-        result=SUCCESS;
+        result = SUCCESS;
     }
     return result;
 }
@@ -379,16 +541,20 @@ int publi_hardCodeData(Publication* list[])
  * \param id int, id searched
  * \return int Returns TRUE(1) if is active, if not, returns FALSE(0)
  */
-int publi_isActive(Publication *list[], int len, int id)
+int publi_isActive(Publication* list[], int len, int id)
 {
     int i;
     int result = FALSE;
+    int bufferId;
+    int bufferState;
 
     if (list != NULL && len > 0 && id > 0)
     {
         for (i = 0; i < len; i++)
         {
-            if(list[i]->state == ACTIVE && id == list[i]->idPublication) //if that publication it's active
+            publi_getId(list[i],&bufferId);
+            publi_getState(list[i],&bufferState);
+            if (bufferState == ACTIVE && id == bufferId) //if that publication it's active
             {
                 result = TRUE;
                 break;
@@ -406,24 +572,24 @@ int publi_isActive(Publication *list[], int len, int id)
  * \param choice int, indicates the state ACTIVE or PAUSED
  * \return int Return (-1) if Error [Invalid length or NULL pointer or if can't find a publication] - (0) if Ok
  */
-int publi_pauseOrActivatePublication(Publication *list[], int len, int idPubli, int choice)
+int publi_pauseOrActivatePublication(Publication* list[], int len, int idPubli, int choice)
 {
     int result = ERROR;
     int index;
 
     if (list != NULL && len > 0 && idPubli > 0 && (choice == PAUSED || choice == ACTIVE))
     {
-        index = publi_findById(list,len,idPubli);
-        if(list[index] != NULL && index!= ERROR)
+        index = publi_findById(list, len, idPubli);
+        if (list[index] != NULL && index != ERROR)
         {
-            if(choice == ACTIVE)
+            if (choice == ACTIVE)
             {
-                list[index]->state = ACTIVE;
+                publi_setState(list[index],ACTIVE);
                 result = SUCCESS;
             }
             else
             {
-                list[index]->state = PAUSED;
+                publi_setState(list[index],PAUSED);
                 result = SUCCESS;
             }
         }
@@ -439,17 +605,19 @@ int publi_pauseOrActivatePublication(Publication *list[], int len, int idPubli, 
  * \param choice int, indicates the state ACTIVE or PAUSED
  * \return int Return (-1) if Error [Invalid length or NULL pointer] - (0) if Ok
  */
-int publi_qtyPublications(Publication *list[], int len, int* qtyAds,int choice)
+int publi_qtyPublications(Publication* list[], int len, int *qtyAds, int choice)
 {
     int result = ERROR;
     int i;
     int counter = 0;
+    int bufferState;
 
     if (list != NULL && len > 0 && qtyAds != NULL && (choice == PAUSED || choice == ACTIVE))
     {
         for (i = 0; i < len; i++)
         {
-            if(list[i] != NULL && list[i]->state == choice)
+            publi_getState(list[i],&bufferState);
+            if (list[i] != NULL && bufferState == choice)
             {
                 counter++;
             }
@@ -468,17 +636,19 @@ int publi_qtyPublications(Publication *list[], int len, int* qtyAds,int choice)
  * \param choice int, indicates the state ACTIVE or PAUSED
  * \return int Return (-1) if Error [Invalid length or NULL pointer] - (0) if Ok
  */
-int publi_printPublicationsByState(Publication *list[], int len,int choice)
+int publi_printPublicationsByState(Publication* list[], int len, int choice)
 {
     int result = ERROR;
     int i;
+    int bufferState;
 
     if (list != NULL && len > 0 && (choice == PAUSED || choice == ACTIVE))
     {
         printf("\n\n%10s %15s %15s %35s %20s\n", "ID PUBLI", "RUBRO", "ID CLIENTE", "TEXTO AVISO", "ESTADO");
         for (i = 0; i < len; i++)
         {
-            if(list[i] != NULL && list[i]->state == choice)
+            publi_getState(list[i],&bufferState);
+            if (list[i] != NULL && bufferState == choice)
             {
                 publi_printOne(list[i]);
             }
@@ -500,10 +670,10 @@ int publi_printPublicationsByState(Publication *list[], int len,int choice)
  * 				  (-4) Error - if advertisement Text could not be changed
  * 				  (0) if Ok
  */
-int publi_modify(Publication* list[], int len,Client* listClient[], int lenClient)
+int publi_modify(Publication* list[], int len, Client* listClient[], int lenClient)
 {
     int result = ERROR;
-    /*int index;
+    int index;
     Publication bufferPubli;
     int option;
 
@@ -514,7 +684,7 @@ int publi_modify(Publication* list[], int len,Client* listClient[], int lenClien
     		&& publi_findById(list, len, bufferPubli.idPublication)!= ERROR)
     	{
     		index = publi_findById(list, len, bufferPubli.idPublication);
-    		if(list[index].isEmpty == FALSE)
+    		if(list[index]!=NULL)
     		{
     			do {
     				if (utn_getNumber(&option,
@@ -530,7 +700,7 @@ int publi_modify(Publication* list[], int len,Client* listClient[], int lenClien
     					case 1:
     						if (cli_printList(listClient,lenClient) == SUCCESS
     								&& utn_getNumber(&bufferPubli.idClient,"Ingrese un nuevo id de cliente a quien asignar la publicacion: ","\nError!",0,INT_MAX, 3) == SUCCESS) {
-    							list[index].idClient = bufferPubli.idClient;
+    							publi_setIdClient(list[index],bufferPubli.idClient);
     							result = SUCCESS;
     						} else {
     							result = -2;
@@ -538,7 +708,7 @@ int publi_modify(Publication* list[], int len,Client* listClient[], int lenClien
     						break;
     					case 2:
     						if (utn_getNumber(&bufferPubli.rubro,"Ingrese un nuevo rubro: ","\nError!",0,INT_MAX, 3) == SUCCESS) {
-    							list[index].rubro = bufferPubli.rubro;
+    							publi_setRubro(list[index],bufferPubli.rubro);
     							result = SUCCESS;
     						} else {
     							result = -3;
@@ -546,7 +716,7 @@ int publi_modify(Publication* list[], int len,Client* listClient[], int lenClien
     						break;
     					case 3:
     						if (utn_getAlphanumeric(bufferPubli.advertisementText,ADV_LEN,"\nIngrese un nuevo texto para el aviso: \n","\nError!",3) == SUCCESS) {
-    							strncpy(list[index].advertisementText, bufferPubli.advertisementText, ADV_LEN);
+    							publi_setAdvTxt(list[index],bufferPubli.advertisementText);
     							result = SUCCESS;
     						} else {
     							result = -4;
@@ -563,6 +733,6 @@ int publi_modify(Publication* list[], int len,Client* listClient[], int lenClien
     			} while (option != 4);
     		}
     	}
-    }*/
+    }
     return result;
 }

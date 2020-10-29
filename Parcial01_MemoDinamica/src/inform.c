@@ -46,23 +46,20 @@ int info_subMenu(Publication *listPublication[], int lenPubli, Client* listClien
                 switch(option)
                 {
                 case 1:
-                    if(info_findIndexClientWithMorePublications(listPublication,lenPubli,listClient,lenClient,&qtyAds)!=ERROR)
+                    index = info_findIndexClientWithMorePublications(listPublication,lenPubli,listClient,lenClient,&qtyAds);
+                    if(index>=0)
                     {
-                        index = info_findIndexClientWithMorePublications(listPublication,lenPubli,listClient,lenClient,&qtyAds);
-                        if(index>=0)
-                        {
-                            printf("\nEl cliente con mas avisos es: \n\n%10s %15s %15s %35s\n", "ID CLIENTE", "NOMBRE", "APELLIDO","CUIT");
-                            cli_printOne(listClient[index]);
-                            printf("\nTiene %d avisos",qtyAds);
-                        }
-                        else if (index == -2)
-                        {
-                            printf("Hay mas de un cliente con la misma cantidad de avisos");
-                        }
-                        else
-                        {
-                            printf("Error");
-                        }
+                        printf("\nEl cliente con mas avisos es: \n\n%10s %15s %15s %35s\n", "ID CLIENTE", "NOMBRE", "APELLIDO","CUIT");
+                        cli_printOne(listClient[index]);
+                        printf("\nTiene %d avisos",qtyAds);
+                    }
+                    else if (index == -2)
+                    {
+                        printf("Hay mas de un cliente con la misma cantidad de avisos");
+                    }
+                    else
+                    {
+                        printf("Error");
                     }
                     break;
                 case 2:
@@ -95,43 +92,37 @@ int info_subMenu(Publication *listPublication[], int lenPubli, Client* listClien
                     }
                     break;
                 case 4:
-                    if(info_findIndexClientWithMorePublicationsActivesorPaused(listPublication,lenPubli,listClient,lenClient,&qtyAds,ACTIVE)!=ERROR)
+                    index = info_findIndexClientWithMorePublicationsActivesorPaused(listPublication,lenPubli,listClient,lenClient,&qtyAds,ACTIVE);
+                    if(index>=0)
                     {
-                        index = info_findIndexClientWithMorePublicationsActivesorPaused(listPublication,lenPubli,listClient,lenClient,&qtyAds,ACTIVE);
-                        if(index>=0)
-                        {
-                            printf("\nEl cliente con mas avisos activos es: \n\n%10s %15s %15s %35s\n", "ID CLIENTE", "NOMBRE", "APELLIDO","CUIT");
-                            cli_printOne(listClient[index]);
-                            printf("\nTiene %d avisos",qtyAds);
-                        }
-                        else if (index == -2)     //imprimir aunque sea 1
-                        {
-                            printf("Hay mas de un cliente con la misma cantidad de avisos activos");
-                        }
-                        else
-                        {
-                            printf("Error");
-                        }
+                        printf("\nEl cliente con mas avisos activos es: \n\n%10s %15s %15s %35s\n", "ID CLIENTE", "NOMBRE", "APELLIDO","CUIT");
+                        cli_printOne(listClient[index]);
+                        printf("\nTiene %d avisos",qtyAds);
+                    }
+                    else if (index == -2)     //imprimir aunque sea 1
+                    {
+                        printf("Hay mas de un cliente con la misma cantidad de avisos activos");
+                    }
+                    else
+                    {
+                        printf("Error");
                     }
                     break;
-                case 5:
-                    if(info_findIndexClientWithMorePublicationsActivesorPaused(listPublication,lenPubli,listClient,lenClient,&qtyAds,PAUSED)!=ERROR)
+                 case 5:
+                    index = info_findIndexClientWithMorePublicationsActivesorPaused(listPublication,lenPubli,listClient,lenClient,&qtyAds,PAUSED);
+                    if(index>=0)
                     {
-                        index = info_findIndexClientWithMorePublicationsActivesorPaused(listPublication,lenPubli,listClient,lenClient,&qtyAds,PAUSED);
-                        if(index>=0)
-                        {
-                            printf("\nEl cliente con mas avisos pausados es: \n\n%10s %15s %15s %35s\n", "ID CLIENTE", "NOMBRE", "APELLIDO","CUIT");
-                            cli_printOne(listClient[index]);
-                            printf("\nTiene %d avisos",qtyAds);
-                        }
-                        else if (index == -2)
-                        {
-                            printf("Hay mas de un cliente con la misma cantidad de avisos pausados");
-                        }
-                        else
-                        {
-                            printf("Error");
-                        }
+                        printf("\nEl cliente con mas avisos pausados es: \n\n%10s %15s %15s %35s\n", "ID CLIENTE", "NOMBRE", "APELLIDO","CUIT");
+                        cli_printOne(listClient[index]);
+                        printf("\nTiene %d avisos",qtyAds);
+                    }
+                    else if (index == -2)
+                    {
+                        printf("Hay mas de un cliente con la misma cantidad de avisos pausados");
+                    }
+                    else
+                    {
+                        printf("Error");
                     }
                     break;
                 }
@@ -154,12 +145,13 @@ int info_subMenu(Publication *listPublication[], int lenPubli, Client* listClien
  * 				  or number of index in which the client with more publications is
  * 				  (-2) if it can't find a client with more publications than other
  */
-int info_findIndexClientWithMorePublications(Publication *listPublication[], int lenPubli, Client* listClient[], int lenClient, int* qtyAds)
+int info_findIndexClientWithMorePublications(Publication* listPublication[], int lenPubli, Client* listClient[], int lenClient, int* qtyAds)
 {
     int result = ERROR;
     int qty;
     int i;
     int max;
+    int bufferIdClient;
 
     if (listClient != NULL && lenClient > 0 && listPublication != NULL && lenPubli > 0 && qtyAds != NULL)
     {
@@ -167,7 +159,8 @@ int info_findIndexClientWithMorePublications(Publication *listPublication[], int
         {
             if(listClient[i] != NULL)
             {
-                qty = info_countPublicationsByClient(listPublication, lenPubli, listClient[i]->idClient);
+                cli_getId(listClient[i],&bufferIdClient);
+                qty = info_countPublicationsByClient(listPublication, lenPubli, bufferIdClient);
                 if (qty > max || i == 0)
                 {
                     max = qty;
@@ -197,12 +190,14 @@ int info_countPublicationsByClient(Publication *listPublication[], int lenPubli,
     int result = ERROR;
     int counter = 0;
     int i;
+    int bufferIdClient;
 
     if (listPublication != NULL && lenPubli > 0 && id >=0)
     {
         for (i = 0; i < lenPubli; i++)
         {
-            if(listPublication[i] != NULL && listPublication[i]->idClient == id)
+            publi_getIdClient(listPublication[i],&bufferIdClient);
+            if(listPublication[i] != NULL && bufferIdClient == id)
             {
                 counter++;
             }
@@ -259,17 +254,19 @@ int info_rubroWithMorePublications(Publication *listPublication[], int lenPubli,
  * \return Return (-1) if Error [Invalid length or NULL pointer] -
  * 				  or number of publications with same rubro number counted
  */
-int info_countPublicationsWithSameRubroNumber(Publication *listPublication[], int lenPubli,int idRubro)
+int info_countPublicationsWithSameRubroNumber(Publication* listPublication[], int lenPubli,int idRubro)
 {
     int result = ERROR;
     int counter = 0;
     int i;
+    int bufferRubro;
 
     if (listPublication != NULL && lenPubli > 0 && idRubro >=0)
     {
         for (i = 0; i < lenPubli; i++)
         {
-            if(listPublication[i] != NULL && listPublication[i]->rubro == idRubro)
+            publi_getRubro(listPublication[i],&bufferRubro);
+            if(listPublication[i] != NULL && bufferRubro == idRubro)
             {
                 counter++;
             }
@@ -291,7 +288,7 @@ int info_countPublicationsWithSameRubroNumber(Publication *listPublication[], in
  * \param lenRubro int Array length
  * \return int Return (-1) if Error [Invalid length or NULL pointer] - (0) if Ok
  */
-int rubro_init(Rubro *listRubro, int lenRubro)
+int rubro_init(Rubro* listRubro, int lenRubro)
 {
     int result = ERROR;
     int i;
@@ -314,7 +311,7 @@ int rubro_init(Rubro *listRubro, int lenRubro)
  * \param rubro int rubro to check if exists
  * \return Return (-1) if Error [flag isEmpty is TRUE] - (0) if Ok
  */
-static int rubroIsInList(Rubro *listRubro, int lenRubro, int rubro)
+static int rubroIsInList(Rubro* listRubro, int lenRubro, int rubro)
 {
     int result = FALSE;
     int i;
@@ -338,17 +335,19 @@ static int rubroIsInList(Rubro *listRubro, int lenRubro, int rubro)
  * \param lenRubro int Array rubros length
  * \return Return (-1) if Error [Invalid length or NULL pointer] - (0) if Ok
  */
-int rubro_generateList(Publication *listPublication[], int lenPublication,Rubro *listRubro, int lenRubro)
+int rubro_generateList(Publication* listPublication[], int lenPublication,Rubro *listRubro, int lenRubro)
 {
     int result = ERROR;
     int i;
     int indexRubro = 0;
+    int bufferRubro;
 
     if (listRubro != NULL && lenRubro > 0 && listPublication != NULL && lenPublication > 0 && rubro_init(listRubro, lenRubro) == SUCCESS)
     {
         for (i = 0; i < lenPublication; i++)
         {
-            if (listPublication[i] != NULL && rubroIsInList(listRubro, lenRubro, listPublication[i]->rubro) == FALSE)
+            publi_getRubro(listPublication[i],&bufferRubro);
+            if (listPublication[i] != NULL && rubroIsInList(listRubro, lenRubro, bufferRubro) == FALSE)
             {
                 listRubro[indexRubro].rubro = listPublication[i]->rubro;
                 listRubro[indexRubro].isEmpty = FALSE;
@@ -383,7 +382,7 @@ int rubro_printOne(Rubro list)
  * \param length int  Array length
  * \return int Return (-1) if Error [Invalid length or NULL pointer] - (0) if Ok
  */
-int rubro_printList(Rubro *list, int len)
+int rubro_printList(Rubro* list, int len)
 {
     int result = ERROR;
     int i;
@@ -418,12 +417,13 @@ int rubro_printList(Rubro *list, int len)
  * 				  or number of index in which the client with more publications is
  * 				  (-2) if it can't find a client with more publications than other
  */
-int info_findIndexClientWithMorePublicationsActivesorPaused(Publication *listPublication[], int lenPubli, Client* listClient[], int lenClient, int* qtyAds, int choice)
+int info_findIndexClientWithMorePublicationsActivesorPaused(Publication* listPublication[], int lenPubli, Client* listClient[], int lenClient, int* qtyAds, int choice)
 {
     int result = ERROR;
     int qty;
     int i;
     int max;
+    int bufferId;
 
     if (listClient != NULL && lenClient > 0 && listPublication != NULL && lenPubli > 0 && qtyAds != NULL && (choice == PAUSED || choice == ACTIVE))
     {
@@ -431,7 +431,8 @@ int info_findIndexClientWithMorePublicationsActivesorPaused(Publication *listPub
         {
             if(listClient[i] != NULL)
             {
-                publi_qtyPublicationsById(listPublication, lenPubli, &qty, choice, listClient[i]->idClient);
+                cli_getId(listClient[i],&bufferId);
+                publi_qtyPublicationsById(listPublication, lenPubli, &qty, choice, bufferId);
                 if (qty > max || i == 0)
                 {
                     max = qty;
@@ -448,17 +449,21 @@ int info_findIndexClientWithMorePublicationsActivesorPaused(Publication *listPub
     return result;
 }
 
-int publi_qtyPublicationsById(Publication *list[], int len, int* qtyAds,int choice,int id)
+int publi_qtyPublicationsById(Publication* list[], int len, int* qtyAds,int choice,int id)
 {
     int result = ERROR;
     int i;
     int counter = 0;
+    int bufferState;
+    int bufferId;
 
     if (list != NULL && len > 0 && qtyAds != NULL && (choice == PAUSED || choice == ACTIVE))
     {
         for (i = 0; i < len; i++)
         {
-            if(list[i] != NULL && list[i]->state == choice && list[i]->idClient == id)
+            publi_getState(list[i],&bufferState);
+            publi_getIdClient(list[i],&bufferId);
+            if(list[i] != NULL && bufferState == choice && bufferId == id)
             {
                 counter++;
             }

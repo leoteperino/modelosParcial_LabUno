@@ -18,13 +18,6 @@ static int getText(char* text, int len);
 static int getAlphaNumeric(char* text, int len);
 static int getMail(char* text, int len);
 static int getAlphanumericDots(char* text, int len);
-static int validationInt(char* num);
-static int validationFloat(char* num);
-static int validationOnlyLetter(char* string);
-static int validationAlphaNumeric(char* string);
-static int validationMail(char* string);
-static int validationAlphanumericDots(char* string);
-
 
 //////////////Functions designed to request data from a user////////////////
 
@@ -202,9 +195,9 @@ static int getString(char *string, int len)
 
     if (string != NULL && len > 0)
     {
-        fflush(stdin); //WINDOWS
+        //fflush(stdin); //WINDOWS
         //__fpurge(stdin); //LINUX
-        //fpurge(stdin); //MACOS
+        fpurge(stdin); //MACOS
         fgets(aux, sizeof(aux), stdin);
         if(aux[strnlen(aux, sizeof(aux)) - 1] == '\n')
         {
@@ -236,7 +229,7 @@ static int getInt(int* integer)
 
     if(integer!=NULL)
     {
-        if(getString(aux,sizeof(aux))== SUCCESS && validationInt(aux) == SUCCESS)
+        if(getString(aux,sizeof(aux))== SUCCESS && isValidNumber(aux,sizeof(aux)))
         {
             *integer = atoi(aux);
             result = SUCCESS;
@@ -257,7 +250,7 @@ static int getFloat(float * decimalNumber)
 
     if(decimalNumber!= NULL)
     {
-        if(getString(aux,sizeof(aux))== SUCCESS && validationFloat(aux) == SUCCESS)
+        if(getString(aux,sizeof(aux))== SUCCESS && isValidNumberFloat(aux,sizeof(aux)))
         {
             *decimalNumber = atof(aux);
             result = SUCCESS;
@@ -278,7 +271,7 @@ static int getText(char* text, int len)
 
     if(text!= NULL && len>0)
     {
-        if(getString(aux,sizeof(aux))== SUCCESS && validationOnlyLetter(aux) == SUCCESS && (strnlen(aux,sizeof(aux))<len))
+        if(getString(aux,sizeof(aux))== SUCCESS && isValidLetters(aux,sizeof(aux)) && (strnlen(aux,sizeof(aux))<len))
         {
             strncpy(text,aux,len);
             result = SUCCESS;
@@ -299,7 +292,7 @@ static int getAlphaNumeric(char* text, int len)
 
     if(text!= NULL && len>0)
     {
-        if(getString(aux,sizeof(aux))== SUCCESS && validationAlphaNumeric(aux) == SUCCESS && (strnlen(aux,sizeof(aux))<len))
+        if(getString(aux,sizeof(aux))== SUCCESS && isValidAlphaNumeric(aux,sizeof(aux)) && (strnlen(aux,sizeof(aux))<len))
         {
             strncpy(text,aux,len);
             result = SUCCESS;
@@ -320,7 +313,7 @@ static int getMail(char* text, int len)
 
     if(text!= NULL && len>0)
     {
-        if(getString(aux,sizeof(aux))== SUCCESS && validationMail(aux) == SUCCESS && (strnlen(aux,sizeof(aux))<len))
+        if(getString(aux,sizeof(aux))== SUCCESS && isValidMail(aux) && (strnlen(aux,sizeof(aux))<len))
         {
             strncpy(text,aux,len);
             result = SUCCESS;
@@ -341,199 +334,10 @@ static int getAlphanumericDots(char* text, int len)
 
     if(text!= NULL && len>0)
     {
-        if(getString(aux,sizeof(aux))== SUCCESS && validationAlphanumericDots(aux) == SUCCESS && (strnlen(aux,sizeof(aux))<len))
+        if(getString(aux,sizeof(aux))== SUCCESS && isValidDocumentNumber(aux,sizeof(aux)) && (strnlen(aux,sizeof(aux))<len))
         {
             strncpy(text,aux,len);
             result = SUCCESS;
-        }
-    }
-    return result;
-}
-
-
-//////////////Functions that validates data////////////////
-
-/**
- * \brief Validates that what it receives is a number.
- * 		  Contemplates both negatives and positives.
- * \param char *num, pointer to the string to be validated
- * \return (-1) ERROR (0) SUCCESS
- */
-static int validationInt(char* num)
-{
-    int result = SUCCESS;
-    int i = 0;
-
-    if(num!= NULL)
-    {
-        if(num[0] == '-' || num[0] == '+')
-        {
-            i = 1;
-        }
-        for( ; num[i]!= '\0'; i++)
-        {
-            if(num[i] < '0' || num[i] > '9')
-            {
-                result = ERROR;
-                break;
-            }
-        }
-    }
-    return result;
-}
-
-/**
- * \brief Validates that what it receives is a number.
- * 		  Contemplates both negative and positive and decimal.
- * \param char *num, pointer to the string to be validated
- * \return (-1) ERROR (0) SUCCESS
- */
-static int validationFloat(char* num)
-{
-    int result = SUCCESS;
-    int i = 0;
-    int counterDot = 0;
-
-    if(num!= NULL)
-    {
-        if(num[0] == '-' || num[0] == '+')
-        {
-            i = 1;
-        }
-        for( ; num[i]!= '\0'; i++)
-        {
-            if(num[i] < '0' || num[i] > '9')
-            {
-                if(num[i] == '.')
-                {
-                    counterDot++;
-                    if(counterDot>1)
-                    {
-                        result = ERROR;
-                        break;
-                    }
-                }
-                else
-                {
-                    result = ERROR;
-                    break;
-                }
-            }
-        }
-    }
-    return result;
-}
-
-/**
- * \brief Valida que lo recibe sea una letra.
- * 		  Contempla espacios.
- * 		  Validates that what you receive it is a letter.
- * 		  Contemplates spaces.
- * \param char *string, puntero a la cadena que se busca validar // pointer to the string to be validated
- * \return (-1) ERROR (0) EXITO // (-1) ERROR (0) SUCCESS
- */
-static int validationOnlyLetter(char* string)
-{
-    int i ;
-    int result = SUCCESS;
-
-    if(string!= NULL)
-    {
-        for(i=0; string[i]!= '\0'; i++)
-        {
-            if((string[i] < 'a' || string [i] > 'z') && (string[i] < 'A' || string[i] > 'Z') && (string[i] != ' '))
-            {
-                result = ERROR;
-                break;
-            }
-        }
-    }
-    return result;
-}
-
-/**
- * \brief Validates that what you receive it is a letter or a number.
- * 		  Contemplates spaces.
- * \param char *string, pointer to the string to be validated
- * \return (-1) ERROR (0) SUCCESS
- */
-static int validationAlphaNumeric(char* string)
-{
-    int i ;
-    int result = SUCCESS;
-
-    if(string!= NULL)
-    {
-        for(i=0; string[i]!= '\0'; i++)
-        {
-            if((string[i] < 'a' || string [i] > 'z') && (string[i] < 'A' || string[i] > 'Z') && (string[i] != ' ') && (string[i] < '0' || string[i] > '9'))
-            {
-                result = ERROR;
-                break;
-            }
-        }
-    }
-    return result;
-}
-
-/**
- * \brief Validates that what you receive it is a valid mail.
- * \param char *string, pointer to the string to be validated
- * \return (-1) ERROR (0) SUCCESS
- */
-static int validationMail(char* string)
-{
-    int i ;
-    int result = SUCCESS;
-    int counterAt=0;
-
-    if(string!= NULL)
-    {
-        for(i=0; string[i]!= '\0'; i++)
-        {
-            if((string[i] < 'a' || string [i] > 'z') && (string[i] < 'A' || string[i] > 'Z')  && (string[i] < '0' || string[i] > '9')
-                    && (string[i] != '.' || string[0] == '.') && (string[i] != '-' || string[0] == '-') && (string[i] != '_' || string[0] == '_'))
-            {
-                if(string[i] == '@')
-                {
-                    counterAt++;
-                    if(counterAt>1 || string[0] == '@')
-                    {
-                        result = ERROR;
-                        break;
-                    }
-                }
-                else
-                {
-                    result = ERROR;
-                    break;
-                }
-            }
-        }
-    }
-    return result;
-}
-
-/**
- * \brief Validates that what you receive it is valid to a letter, number, dot or hyphen.
- * \param char *string, pointer to the string to be validated
- * \return (-1) ERROR (0) SUCCESS
- */
-static int validationAlphanumericDots(char* string)
-{
-    int i ;
-    int result = SUCCESS;
-
-    if(string!= NULL)
-    {
-        for(i=0; string[i]!= '\0'; i++)
-        {
-            if((string[i] < 'a' || string [i] > 'z') && (string[i] < 'A' || string[i] > 'Z')  && (string[i] < '0' || string[i] > '9')
-                    && (string[i] != '.' || string[0] == '.') && (string[i] != '-' || string[0] == '-'))
-            {
-                result = ERROR;
-                break;
-            }
         }
     }
     return result;

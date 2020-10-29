@@ -9,7 +9,8 @@ C_SRCS += \
 ../src/Parcial01_Lab.c \
 ../src/Publication.c \
 ../src/inform.c \
-../src/inputs.c 
+../src/inputs.c \
+../src/validations.c 
 
 OBJS += \
 ./src/Client.o \
@@ -17,7 +18,8 @@ OBJS += \
 ./src/Parcial01_Lab.o \
 ./src/Publication.o \
 ./src/inform.o \
-./src/inputs.o 
+./src/inputs.o \
+./src/validations.o 
 
 C_DEPS += \
 ./src/Client.d \
@@ -25,7 +27,8 @@ C_DEPS += \
 ./src/Parcial01_Lab.d \
 ./src/Publication.d \
 ./src/inform.d \
-./src/inputs.d 
+./src/inputs.d \
+./src/validations.d 
 
 
 # Each subdirectory must supply rules for building sources it contributes

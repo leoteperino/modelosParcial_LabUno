@@ -22,13 +22,13 @@ typedef struct
     char lastName[NAME_LEN];
     char cuit[CUIT_LEN];
     int idClient;
-    //int isEmpty;
 } Client;
-
 
 Client* cli_newParametres(char* name, char* lastName, char* cuit, int idClient);
 Client* cli_new(void);
 void cli_delete(Client* pc);
+
+/****************************SETTERS AND GETTERS****************************************/
 
 int cli_setName(Client* this, char* name);
 int cli_getName(Client* this, char* name);
@@ -38,21 +38,22 @@ int cli_setCuit(Client* this, char* cuit);
 int cli_getCuit(Client* this, char* cuit);
 int cli_setIdTxt(Client* this, char* id);
 int cli_getIdTxt(Client* this, char* id);
+int cli_setId(Client* this, int id);
+int cli_getId(Client* this, int* id);
 
-/*********************************************************************/
+/****************************CLIENT FUNCTIONS*****************************************/
 
-int cli_initArray(Client *list[], int len);
-int cli_findEmptyIndex(Client *list[], int len);
-int cli_loadAndAddData(Client *list[], int len);
-int cli_loadAndAddDataConstructorParametres(Client *list[], int len);
+int cli_initArray(Client* list[], int len);
+int cli_findEmptyIndex(Client* list[], int len);
+int cli_loadAndAddData(Client* list[], int len);
+int cli_loadAndAddDataConstructorParametres(Client* list[], int len);
 int cli_findById(Client* list[], int len, int id);
 int cli_modify(Client* list[], int len);
 int cli_remove(Client* list[], int len, int id);
 int cli_printOne(Client* pClient);
 int cli_printList(Client* list[], int len);
-int cli_isAnyData(Client* list[], int len);//esto no tiene sentido
+int cli_isAnyData(Client* list[], int len);
 int cli_hardCodeData(Client* list[]);
-
-int cli_sort(Client* list, int len, int order);
+int cli_sort(Client* list[], int len, int order);
 
 #endif /* CLIENT_H_ */

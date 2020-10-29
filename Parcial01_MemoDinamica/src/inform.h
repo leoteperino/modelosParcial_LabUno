@@ -15,7 +15,7 @@ typedef struct
     int isEmpty;
 } Rubro;
 
-int info_subMenu(Publication *listPublication[], int lenPubli, Client* listClient[], int lenClient);
+int info_subMenu(Publication* listPublication[], int lenPubli, Client* listClient[], int lenClient);
 int info_findIndexClientWithMorePublications(Publication *listPublication[], int lenPubli, Client* listClient[], int lenClient, int* qtyAds);
 int info_countPublicationsByClient(Publication *listPublication[], int lenPubli, int id);
 int info_rubroWithMorePublications(Publication *listPublication[], int lenPubli, Rubro* listRubro, int lenRubro);
